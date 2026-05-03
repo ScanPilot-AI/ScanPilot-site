@@ -1,0 +1,6 @@
+# Optional: regenerate static demo slices from public HuggingFace iPanTSMini volumes
+nibabel>=5.2
+numpy>=2.0
+pillow>=10.0
+scipy>=1.13
+requests>=2.32

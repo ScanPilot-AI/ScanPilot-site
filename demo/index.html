@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CT-PDAC Review Console · OncoShield Demo</title>
+  <meta name="description" content="Public sample-data demonstration of OncoShield’s CT review workflow. Not for clinical use. Not FDA cleared." />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/demo-page.css" />
+</head>
+<body class="demo-page">
+  <nav class="nav demo-nav">
+    <div class="navin">
+      <a class="brand" href="../index.html#top">
+        <span class="brand-main"><span class="brand-mark"></span><span>OncoShield</span></span>
+        <span class="brand-sub">Powered by ePAI</span>
+      </a>
+      <div class="links">
+        <a href="../index.html#top">Home</a>
+        <a href="../index.html#platform">Platform</a>
+        <a href="../index.html#evidence">Evidence</a>
+        <a href="../index.html#product">Product</a>
+        <a href="../index.html#commercial">Commercial</a>
+        <a href="../index.html#investors">Investors</a>
+        <a class="demo-nav-active" href="./#viewer">Interactive demo</a>
+        <a href="../index.html#contact">Contact</a>
+        <a class="nav-cta" href="./#viewer">Launch interactive demo</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <header class="demo-hero">
+      <div class="demo-hero-inner reveal">
+        <div class="eyebrow">CT-PDAC review console</div>
+        <h1>Early cancer signals may already be in the scan.</h1>
+        <p class="lead">See how OncoShield turns routine abdominal CT into an AI-assisted second-read workflow, starting with pancreatic cancer.</p>
+        <div class="demo-badge-row">
+          <span class="demo-pill">Public sample-data demo</span>
+          <span class="demo-pill">Not for clinical use</span>
+        </div>
+        <div class="demo-hero-actions">
+          <a class="btn primary" href="#viewer">Launch demo</a>
+          <a class="btn ghost" href="#workflow">View workflow</a>
+        </div>
+        <p class="demo-hero-foot">Research and product demonstration only. Not for diagnosis, treatment, or patient-care decisions. Uses public, de-identified PanTS sample volumes (iPanTSMini). Not FDA cleared.</p>
+      </div>
+    </header>
+
+    <section class="demo-console-section" id="viewer">
+      <div class="demo-console-card reveal">
+        <div class="demo-console-head">
+          <span class="demo-console-title">CT-PDAC Review Console</span>
+          <div class="demo-console-head-meta">
+            <span class="demo-pill">Public sample case</span>
+            <span class="demo-pill" id="demoCaseSource">Loading…</span>
+          </div>
+        </div>
+
+        <div class="demo-viewer-panel">
+          <div class="demo-viewer-stage" id="viewerStage" aria-label="Axial CT with optional segmentation overlays">
+            <img class="demo-ct-base" id="ctImage" alt="Axial CT slice" src="" width="512" height="512" />
+            <img class="demo-overlay-layer" id="olPancreas" alt="" role="presentation" src="" width="512" height="512" />
+            <img class="demo-overlay-layer" id="olDuct" alt="" role="presentation" src="" width="512" height="512" />
+            <img class="demo-overlay-layer" id="olLesion" alt="" role="presentation" src="" width="512" height="512" />
+            <img class="demo-overlay-layer" id="olNearby" alt="" role="presentation" src="" width="512" height="512" />
+            <div class="demo-crosshair-v" id="crossV"></div>
+            <div class="demo-crosshair-h" id="crossH"></div>
+          </div>
+
+          <div class="demo-controls">
+            <div class="demo-case-row">
+              <label for="caseSelect">Case</label>
+              <select class="demo-select" id="caseSelect" aria-label="Select sample case"></select>
+            </div>
+            <div class="demo-toggle-row" id="overlayToggles">
+              <label class="demo-toggle"><input type="checkbox" data-layer="pancreas" checked /> Pancreas</label>
+              <label class="demo-toggle"><input type="checkbox" data-layer="duct" checked /> Pancreatic duct</label>
+              <label class="demo-toggle"><input type="checkbox" data-layer="lesion" checked /> Pancreatic lesion</label>
+              <label class="demo-toggle"><input type="checkbox" data-layer="nearby" checked /> Nearby anatomy</label>
+            </div>
+            <div class="demo-slice-row">
+              <label><span>Axial slice</span><span id="sliceLabel">1 / 1</span></label>
+              <input type="range" id="sliceSlider" min="0" max="0" value="0" />
+            </div>
+          </div>
+        </div>
+
+        <aside class="demo-findings-panel" aria-labelledby="findingsHeading">
+          <h2 id="findingsHeading">AI Findings</h2>
+          <dl class="demo-dl">
+            <dt>Case ID</dt>
+            <dd id="fCaseId">—</dd>
+            <dt>Anatomy parsed</dt>
+            <dd id="fAnatomy">—</dd>
+            <dt>Suspicious region</dt>
+            <dd id="fSuspicious">—</dd>
+            <dt>Review queue</dt>
+            <dd id="fQueue">—</dd>
+          </dl>
+          <div class="demo-score-block">
+            <div class="eyebrow" style="margin-bottom: 6px">PDAC suspicion score</div>
+            <div class="demo-score-value" id="fScore">—<span class="unit">· demo</span></div>
+            <p class="tight" id="fScoreBand" style="margin-top: 4px; font-size: 0.88rem; color: #b9ccdf"></p>
+            <p class="tight" style="margin-top: 8px; font-size: 0.8rem">Demo score for workflow illustration only.</p>
+          </div>
+          <div>
+            <div class="eyebrow" style="margin-bottom: 8px">Findings</div>
+            <ul class="demo-findings-list" id="fFindings"></ul>
+          </div>
+          <div>
+            <div class="eyebrow" style="margin-bottom: 8px">Recommended workflow</div>
+            <ul class="demo-workflow-list" id="fWorkflow"></ul>
+          </div>
+          <p class="demo-disclaimer-box" id="fSummary"></p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="demo-workflow-section" id="workflow">
+      <div class="demo-strip-title reveal">
+        <h2>From ingest to radiologist review</h2>
+        <p class="tight">A linear pipeline designed for assistive review, not autonomous diagnosis.</p>
+      </div>
+      <div class="demo-workflow-grid reveal">
+        <article class="demo-workflow-card">
+          <span class="demo-workflow-step">01</span>
+          <h3>Ingest CT</h3>
+          <p>Routine abdominal CT enters the review layer with standard DICOM metadata.</p>
+        </article>
+        <article class="demo-workflow-card">
+          <span class="demo-workflow-step">02</span>
+          <h3>Parse anatomy</h3>
+          <p>Organ context is established so findings stay anatomy-aware, not floating scores.</p>
+        </article>
+        <article class="demo-workflow-card">
+          <span class="demo-workflow-step">03</span>
+          <h3>Localize suspicious region</h3>
+          <p>Candidate areas are surfaced spatially for human verification.</p>
+        </article>
+        <article class="demo-workflow-card">
+          <span class="demo-workflow-step">04</span>
+          <h3>Score PDAC suspicion</h3>
+          <p>Risk stratification supports triage; final determination remains clinical.</p>
+        </article>
+        <article class="demo-workflow-card">
+          <span class="demo-workflow-step">05</span>
+          <h3>Queue for radiologist review</h3>
+          <p>Cases route into second-read workflows with audit-friendly outputs.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="demo-prose-section">
+      <div class="demo-prose-grid">
+        <article class="demo-prose-card reveal">
+          <div class="eyebrow">From demo to paid validation</div>
+          <h2>Run OncoShield on historical CT archives</h2>
+          <p class="tight">Before any live clinical deployment, hospitals can run OncoShield on historical CT archives to quantify missed-opportunity cases, false positive burden, lead time, and radiologist review workload.</p>
+        </article>
+        <article class="demo-prose-card reveal">
+          <div class="eyebrow">Technical approach</div>
+          <h2>Anatomy-aware, radiologist-in-the-loop</h2>
+          <p class="tight">Built around anatomy-aware CT parsing, organ and tumor segmentation, lesion localization, and radiologist-in-the-loop review. This demo uses static exports from public sample volumes for fast loading, not live server-side inference.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" style="padding-bottom: 64px">
+      <p class="compliance" style="max-width: 72ch; margin: 0 auto">Research and product demo only. Not for diagnosis, treatment, or patient-care decisions. Not FDA cleared. The standalone PanTS-Viewer prototype remains available in the repository for research use.</p>
+      <p style="text-align: center; margin-top: 18px"><a class="btn" href="../index.html">Back to OncoShield home</a></p>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <span>OncoShield · Powered by ePAI</span>
+    <span><a href="mailto:szhu71@jh.edu">szhu71@jh.edu</a></span>
+  </footer>
+
+  <script src="../assets/js/demo-page.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+# macOS
+.DS_Store
+
+# env / secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+credentials/
+secrets/
+private/
+
+# dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# build outputs
+dist/
+build/
+.next/
+out/
+
+# raw medical imaging data - do not commit to public website repo
+*.nii
+*.nii.gz
+*.npz
+*.dcm
+*.dicom
+
+# large/private spreadsheets and PDFs
+PanTS-Viewer/PanTS/data/metadata.xlsx
+PanTS-Viewer/PanTS/data/pdf/
+PanTS-Viewer/flask-server/report_template_3.pdf
+assets/images/epai-paper.pdf
+
+# backend runtime/temp
+PanTS-Viewer/flask-server/tmp/
+PanTS-Viewer/flask-server/file
+PanTS-Viewer/flask-server/makes
+
+# private pitch / investor materials
+*Pitch*.pdf
+*Investor*.pdf
+*deck*.pdf

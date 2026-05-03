@@ -1,0 +1,401 @@
+{
+  "version": 1,
+  "disclaimer": "Research and product demonstration only. Not for diagnosis, treatment, or patient-care decisions. Not FDA cleared.",
+  "cases": [
+    {
+      "caseId": "PanTS_00000001",
+      "dataSource": "Public PanTS subset (iPanTSMini on HuggingFace). De-identified research sample.",
+      "sliceCount": 9,
+      "ctSlices": [
+        "demo-cases/PanTS_00000001/ct/00.png",
+        "demo-cases/PanTS_00000001/ct/01.png",
+        "demo-cases/PanTS_00000001/ct/02.png",
+        "demo-cases/PanTS_00000001/ct/03.png",
+        "demo-cases/PanTS_00000001/ct/04.png",
+        "demo-cases/PanTS_00000001/ct/05.png",
+        "demo-cases/PanTS_00000001/ct/06.png",
+        "demo-cases/PanTS_00000001/ct/07.png",
+        "demo-cases/PanTS_00000001/ct/08.png"
+      ],
+      "overlays": {
+        "pancreas": [
+          "demo-cases/PanTS_00000001/overlay/pancreas_00.png",
+          "demo-cases/PanTS_00000001/overlay/pancreas_01.png",
+          "demo-cases/PanTS_00000001/overlay/pancreas_02.png",
+          "demo-cases/PanTS_00000001/overlay/pancreas_03.png",
+          "demo-cases/PanTS_00000001/overlay/pancreas_04.png",
+          "demo-cases/PanTS_00000001/overlay/pancreas_05.png",
+          "demo-cases/PanTS_00000001/overlay/pancreas_06.png",
+          "demo-cases/PanTS_00000001/overlay/pancreas_07.png",
+          "demo-cases/PanTS_00000001/overlay/pancreas_08.png"
+        ],
+        "duct": [
+          "demo-cases/PanTS_00000001/overlay/duct_00.png",
+          "demo-cases/PanTS_00000001/overlay/duct_01.png",
+          "demo-cases/PanTS_00000001/overlay/duct_02.png",
+          "demo-cases/PanTS_00000001/overlay/duct_03.png",
+          "demo-cases/PanTS_00000001/overlay/duct_04.png",
+          "demo-cases/PanTS_00000001/overlay/duct_05.png",
+          "demo-cases/PanTS_00000001/overlay/duct_06.png",
+          "demo-cases/PanTS_00000001/overlay/duct_07.png",
+          "demo-cases/PanTS_00000001/overlay/duct_08.png"
+        ],
+        "lesion": [
+          "demo-cases/PanTS_00000001/overlay/lesion_00.png",
+          "demo-cases/PanTS_00000001/overlay/lesion_01.png",
+          "demo-cases/PanTS_00000001/overlay/lesion_02.png",
+          "demo-cases/PanTS_00000001/overlay/lesion_03.png",
+          "demo-cases/PanTS_00000001/overlay/lesion_04.png",
+          "demo-cases/PanTS_00000001/overlay/lesion_05.png",
+          "demo-cases/PanTS_00000001/overlay/lesion_06.png",
+          "demo-cases/PanTS_00000001/overlay/lesion_07.png",
+          "demo-cases/PanTS_00000001/overlay/lesion_08.png"
+        ],
+        "nearby": [
+          "demo-cases/PanTS_00000001/overlay/nearby_00.png",
+          "demo-cases/PanTS_00000001/overlay/nearby_01.png",
+          "demo-cases/PanTS_00000001/overlay/nearby_02.png",
+          "demo-cases/PanTS_00000001/overlay/nearby_03.png",
+          "demo-cases/PanTS_00000001/overlay/nearby_04.png",
+          "demo-cases/PanTS_00000001/overlay/nearby_05.png",
+          "demo-cases/PanTS_00000001/overlay/nearby_06.png",
+          "demo-cases/PanTS_00000001/overlay/nearby_07.png",
+          "demo-cases/PanTS_00000001/overlay/nearby_08.png"
+        ]
+      },
+      "findingSummary": "Anatomy-aware parse complete. Candidate region flagged for human review.",
+      "pdacSuspicionScore": 0.41,
+      "pdacSuspicionLabel": "Moderate",
+      "anatomyStatus": "Parsed",
+      "suspiciousRegionStatus": "Localized (demo visualization)",
+      "reviewQueueStatus": "Queued for radiologist second-read (workflow simulation)",
+      "findings": [
+        "Pancreas localized on axial series",
+        "Pancreatic duct / peri-pancreatic region reviewed",
+        "Candidate lesion overlay available where label present",
+        "Case queued for radiologist review in demo workflow"
+      ],
+      "recommendedWorkflow": [
+        "Radiologist second-read on primary study",
+        "Compare with prior CT if available",
+        "Consider pancreas-protocol CT, MRI/MRCP, or EUS per clinical context"
+      ]
+    },
+    {
+      "caseId": "PanTS_00000017",
+      "dataSource": "Public PanTS subset (iPanTSMini on HuggingFace). De-identified research sample.",
+      "sliceCount": 9,
+      "ctSlices": [
+        "demo-cases/PanTS_00000017/ct/00.png",
+        "demo-cases/PanTS_00000017/ct/01.png",
+        "demo-cases/PanTS_00000017/ct/02.png",
+        "demo-cases/PanTS_00000017/ct/03.png",
+        "demo-cases/PanTS_00000017/ct/04.png",
+        "demo-cases/PanTS_00000017/ct/05.png",
+        "demo-cases/PanTS_00000017/ct/06.png",
+        "demo-cases/PanTS_00000017/ct/07.png",
+        "demo-cases/PanTS_00000017/ct/08.png"
+      ],
+      "overlays": {
+        "pancreas": [
+          "demo-cases/PanTS_00000017/overlay/pancreas_00.png",
+          "demo-cases/PanTS_00000017/overlay/pancreas_01.png",
+          "demo-cases/PanTS_00000017/overlay/pancreas_02.png",
+          "demo-cases/PanTS_00000017/overlay/pancreas_03.png",
+          "demo-cases/PanTS_00000017/overlay/pancreas_04.png",
+          "demo-cases/PanTS_00000017/overlay/pancreas_05.png",
+          "demo-cases/PanTS_00000017/overlay/pancreas_06.png",
+          "demo-cases/PanTS_00000017/overlay/pancreas_07.png",
+          "demo-cases/PanTS_00000017/overlay/pancreas_08.png"
+        ],
+        "duct": [
+          "demo-cases/PanTS_00000017/overlay/duct_00.png",
+          "demo-cases/PanTS_00000017/overlay/duct_01.png",
+          "demo-cases/PanTS_00000017/overlay/duct_02.png",
+          "demo-cases/PanTS_00000017/overlay/duct_03.png",
+          "demo-cases/PanTS_00000017/overlay/duct_04.png",
+          "demo-cases/PanTS_00000017/overlay/duct_05.png",
+          "demo-cases/PanTS_00000017/overlay/duct_06.png",
+          "demo-cases/PanTS_00000017/overlay/duct_07.png",
+          "demo-cases/PanTS_00000017/overlay/duct_08.png"
+        ],
+        "lesion": [
+          "demo-cases/PanTS_00000017/overlay/lesion_00.png",
+          "demo-cases/PanTS_00000017/overlay/lesion_01.png",
+          "demo-cases/PanTS_00000017/overlay/lesion_02.png",
+          "demo-cases/PanTS_00000017/overlay/lesion_03.png",
+          "demo-cases/PanTS_00000017/overlay/lesion_04.png",
+          "demo-cases/PanTS_00000017/overlay/lesion_05.png",
+          "demo-cases/PanTS_00000017/overlay/lesion_06.png",
+          "demo-cases/PanTS_00000017/overlay/lesion_07.png",
+          "demo-cases/PanTS_00000017/overlay/lesion_08.png"
+        ],
+        "nearby": [
+          "demo-cases/PanTS_00000017/overlay/nearby_00.png",
+          "demo-cases/PanTS_00000017/overlay/nearby_01.png",
+          "demo-cases/PanTS_00000017/overlay/nearby_02.png",
+          "demo-cases/PanTS_00000017/overlay/nearby_03.png",
+          "demo-cases/PanTS_00000017/overlay/nearby_04.png",
+          "demo-cases/PanTS_00000017/overlay/nearby_05.png",
+          "demo-cases/PanTS_00000017/overlay/nearby_06.png",
+          "demo-cases/PanTS_00000017/overlay/nearby_07.png",
+          "demo-cases/PanTS_00000017/overlay/nearby_08.png"
+        ]
+      },
+      "findingSummary": "Anatomy-aware parse complete. Candidate region flagged for human review.",
+      "pdacSuspicionScore": 0.62,
+      "pdacSuspicionLabel": "Moderate",
+      "anatomyStatus": "Parsed",
+      "suspiciousRegionStatus": "Localized (demo visualization)",
+      "reviewQueueStatus": "Queued for radiologist second-read (workflow simulation)",
+      "findings": [
+        "Pancreas localized on axial series",
+        "Pancreatic duct / peri-pancreatic region reviewed",
+        "Candidate lesion overlay available where label present",
+        "Case queued for radiologist review in demo workflow"
+      ],
+      "recommendedWorkflow": [
+        "Radiologist second-read on primary study",
+        "Compare with prior CT if available",
+        "Consider pancreas-protocol CT, MRI/MRCP, or EUS per clinical context"
+      ]
+    },
+    {
+      "caseId": "PanTS_00000030",
+      "dataSource": "Public PanTS subset (iPanTSMini on HuggingFace). De-identified research sample.",
+      "sliceCount": 9,
+      "ctSlices": [
+        "demo-cases/PanTS_00000030/ct/00.png",
+        "demo-cases/PanTS_00000030/ct/01.png",
+        "demo-cases/PanTS_00000030/ct/02.png",
+        "demo-cases/PanTS_00000030/ct/03.png",
+        "demo-cases/PanTS_00000030/ct/04.png",
+        "demo-cases/PanTS_00000030/ct/05.png",
+        "demo-cases/PanTS_00000030/ct/06.png",
+        "demo-cases/PanTS_00000030/ct/07.png",
+        "demo-cases/PanTS_00000030/ct/08.png"
+      ],
+      "overlays": {
+        "pancreas": [
+          "demo-cases/PanTS_00000030/overlay/pancreas_00.png",
+          "demo-cases/PanTS_00000030/overlay/pancreas_01.png",
+          "demo-cases/PanTS_00000030/overlay/pancreas_02.png",
+          "demo-cases/PanTS_00000030/overlay/pancreas_03.png",
+          "demo-cases/PanTS_00000030/overlay/pancreas_04.png",
+          "demo-cases/PanTS_00000030/overlay/pancreas_05.png",
+          "demo-cases/PanTS_00000030/overlay/pancreas_06.png",
+          "demo-cases/PanTS_00000030/overlay/pancreas_07.png",
+          "demo-cases/PanTS_00000030/overlay/pancreas_08.png"
+        ],
+        "duct": [
+          "demo-cases/PanTS_00000030/overlay/duct_00.png",
+          "demo-cases/PanTS_00000030/overlay/duct_01.png",
+          "demo-cases/PanTS_00000030/overlay/duct_02.png",
+          "demo-cases/PanTS_00000030/overlay/duct_03.png",
+          "demo-cases/PanTS_00000030/overlay/duct_04.png",
+          "demo-cases/PanTS_00000030/overlay/duct_05.png",
+          "demo-cases/PanTS_00000030/overlay/duct_06.png",
+          "demo-cases/PanTS_00000030/overlay/duct_07.png",
+          "demo-cases/PanTS_00000030/overlay/duct_08.png"
+        ],
+        "lesion": [
+          "demo-cases/PanTS_00000030/overlay/lesion_00.png",
+          "demo-cases/PanTS_00000030/overlay/lesion_01.png",
+          "demo-cases/PanTS_00000030/overlay/lesion_02.png",
+          "demo-cases/PanTS_00000030/overlay/lesion_03.png",
+          "demo-cases/PanTS_00000030/overlay/lesion_04.png",
+          "demo-cases/PanTS_00000030/overlay/lesion_05.png",
+          "demo-cases/PanTS_00000030/overlay/lesion_06.png",
+          "demo-cases/PanTS_00000030/overlay/lesion_07.png",
+          "demo-cases/PanTS_00000030/overlay/lesion_08.png"
+        ],
+        "nearby": [
+          "demo-cases/PanTS_00000030/overlay/nearby_00.png",
+          "demo-cases/PanTS_00000030/overlay/nearby_01.png",
+          "demo-cases/PanTS_00000030/overlay/nearby_02.png",
+          "demo-cases/PanTS_00000030/overlay/nearby_03.png",
+          "demo-cases/PanTS_00000030/overlay/nearby_04.png",
+          "demo-cases/PanTS_00000030/overlay/nearby_05.png",
+          "demo-cases/PanTS_00000030/overlay/nearby_06.png",
+          "demo-cases/PanTS_00000030/overlay/nearby_07.png",
+          "demo-cases/PanTS_00000030/overlay/nearby_08.png"
+        ]
+      },
+      "findingSummary": "Anatomy-aware parse complete. Candidate region flagged for human review.",
+      "pdacSuspicionScore": 0.55,
+      "pdacSuspicionLabel": "Moderate",
+      "anatomyStatus": "Parsed",
+      "suspiciousRegionStatus": "Localized (demo visualization)",
+      "reviewQueueStatus": "Queued for radiologist second-read (workflow simulation)",
+      "findings": [
+        "Pancreas localized on axial series",
+        "Pancreatic duct / peri-pancreatic region reviewed",
+        "Candidate lesion overlay available where label present",
+        "Case queued for radiologist review in demo workflow"
+      ],
+      "recommendedWorkflow": [
+        "Radiologist second-read on primary study",
+        "Compare with prior CT if available",
+        "Consider pancreas-protocol CT, MRI/MRCP, or EUS per clinical context"
+      ]
+    },
+    {
+      "caseId": "PanTS_00000035",
+      "dataSource": "Public PanTS subset (iPanTSMini on HuggingFace). De-identified research sample.",
+      "sliceCount": 9,
+      "ctSlices": [
+        "demo-cases/PanTS_00000035/ct/00.png",
+        "demo-cases/PanTS_00000035/ct/01.png",
+        "demo-cases/PanTS_00000035/ct/02.png",
+        "demo-cases/PanTS_00000035/ct/03.png",
+        "demo-cases/PanTS_00000035/ct/04.png",
+        "demo-cases/PanTS_00000035/ct/05.png",
+        "demo-cases/PanTS_00000035/ct/06.png",
+        "demo-cases/PanTS_00000035/ct/07.png",
+        "demo-cases/PanTS_00000035/ct/08.png"
+      ],
+      "overlays": {
+        "pancreas": [
+          "demo-cases/PanTS_00000035/overlay/pancreas_00.png",
+          "demo-cases/PanTS_00000035/overlay/pancreas_01.png",
+          "demo-cases/PanTS_00000035/overlay/pancreas_02.png",
+          "demo-cases/PanTS_00000035/overlay/pancreas_03.png",
+          "demo-cases/PanTS_00000035/overlay/pancreas_04.png",
+          "demo-cases/PanTS_00000035/overlay/pancreas_05.png",
+          "demo-cases/PanTS_00000035/overlay/pancreas_06.png",
+          "demo-cases/PanTS_00000035/overlay/pancreas_07.png",
+          "demo-cases/PanTS_00000035/overlay/pancreas_08.png"
+        ],
+        "duct": [
+          "demo-cases/PanTS_00000035/overlay/duct_00.png",
+          "demo-cases/PanTS_00000035/overlay/duct_01.png",
+          "demo-cases/PanTS_00000035/overlay/duct_02.png",
+          "demo-cases/PanTS_00000035/overlay/duct_03.png",
+          "demo-cases/PanTS_00000035/overlay/duct_04.png",
+          "demo-cases/PanTS_00000035/overlay/duct_05.png",
+          "demo-cases/PanTS_00000035/overlay/duct_06.png",
+          "demo-cases/PanTS_00000035/overlay/duct_07.png",
+          "demo-cases/PanTS_00000035/overlay/duct_08.png"
+        ],
+        "lesion": [
+          "demo-cases/PanTS_00000035/overlay/lesion_00.png",
+          "demo-cases/PanTS_00000035/overlay/lesion_01.png",
+          "demo-cases/PanTS_00000035/overlay/lesion_02.png",
+          "demo-cases/PanTS_00000035/overlay/lesion_03.png",
+          "demo-cases/PanTS_00000035/overlay/lesion_04.png",
+          "demo-cases/PanTS_00000035/overlay/lesion_05.png",
+          "demo-cases/PanTS_00000035/overlay/lesion_06.png",
+          "demo-cases/PanTS_00000035/overlay/lesion_07.png",
+          "demo-cases/PanTS_00000035/overlay/lesion_08.png"
+        ],
+        "nearby": [
+          "demo-cases/PanTS_00000035/overlay/nearby_00.png",
+          "demo-cases/PanTS_00000035/overlay/nearby_01.png",
+          "demo-cases/PanTS_00000035/overlay/nearby_02.png",
+          "demo-cases/PanTS_00000035/overlay/nearby_03.png",
+          "demo-cases/PanTS_00000035/overlay/nearby_04.png",
+          "demo-cases/PanTS_00000035/overlay/nearby_05.png",
+          "demo-cases/PanTS_00000035/overlay/nearby_06.png",
+          "demo-cases/PanTS_00000035/overlay/nearby_07.png",
+          "demo-cases/PanTS_00000035/overlay/nearby_08.png"
+        ]
+      },
+      "findingSummary": "Anatomy-aware parse complete. Candidate region flagged for human review.",
+      "pdacSuspicionScore": 0.71,
+      "pdacSuspicionLabel": "Elevated",
+      "anatomyStatus": "Parsed",
+      "suspiciousRegionStatus": "Localized (demo visualization)",
+      "reviewQueueStatus": "Queued for radiologist second-read (workflow simulation)",
+      "findings": [
+        "Pancreas localized on axial series",
+        "Pancreatic duct / peri-pancreatic region reviewed",
+        "Candidate lesion overlay available where label present",
+        "Case queued for radiologist review in demo workflow"
+      ],
+      "recommendedWorkflow": [
+        "Radiologist second-read on primary study",
+        "Compare with prior CT if available",
+        "Consider pancreas-protocol CT, MRI/MRCP, or EUS per clinical context"
+      ]
+    },
+    {
+      "caseId": "PanTS_00000121",
+      "dataSource": "Public PanTS subset (iPanTSMini on HuggingFace). De-identified research sample.",
+      "sliceCount": 9,
+      "ctSlices": [
+        "demo-cases/PanTS_00000121/ct/00.png",
+        "demo-cases/PanTS_00000121/ct/01.png",
+        "demo-cases/PanTS_00000121/ct/02.png",
+        "demo-cases/PanTS_00000121/ct/03.png",
+        "demo-cases/PanTS_00000121/ct/04.png",
+        "demo-cases/PanTS_00000121/ct/05.png",
+        "demo-cases/PanTS_00000121/ct/06.png",
+        "demo-cases/PanTS_00000121/ct/07.png",
+        "demo-cases/PanTS_00000121/ct/08.png"
+      ],
+      "overlays": {
+        "pancreas": [
+          "demo-cases/PanTS_00000121/overlay/pancreas_00.png",
+          "demo-cases/PanTS_00000121/overlay/pancreas_01.png",
+          "demo-cases/PanTS_00000121/overlay/pancreas_02.png",
+          "demo-cases/PanTS_00000121/overlay/pancreas_03.png",
+          "demo-cases/PanTS_00000121/overlay/pancreas_04.png",
+          "demo-cases/PanTS_00000121/overlay/pancreas_05.png",
+          "demo-cases/PanTS_00000121/overlay/pancreas_06.png",
+          "demo-cases/PanTS_00000121/overlay/pancreas_07.png",
+          "demo-cases/PanTS_00000121/overlay/pancreas_08.png"
+        ],
+        "duct": [
+          "demo-cases/PanTS_00000121/overlay/duct_00.png",
+          "demo-cases/PanTS_00000121/overlay/duct_01.png",
+          "demo-cases/PanTS_00000121/overlay/duct_02.png",
+          "demo-cases/PanTS_00000121/overlay/duct_03.png",
+          "demo-cases/PanTS_00000121/overlay/duct_04.png",
+          "demo-cases/PanTS_00000121/overlay/duct_05.png",
+          "demo-cases/PanTS_00000121/overlay/duct_06.png",
+          "demo-cases/PanTS_00000121/overlay/duct_07.png",
+          "demo-cases/PanTS_00000121/overlay/duct_08.png"
+        ],
+        "lesion": [
+          "demo-cases/PanTS_00000121/overlay/lesion_00.png",
+          "demo-cases/PanTS_00000121/overlay/lesion_01.png",
+          "demo-cases/PanTS_00000121/overlay/lesion_02.png",
+          "demo-cases/PanTS_00000121/overlay/lesion_03.png",
+          "demo-cases/PanTS_00000121/overlay/lesion_04.png",
+          "demo-cases/PanTS_00000121/overlay/lesion_05.png",
+          "demo-cases/PanTS_00000121/overlay/lesion_06.png",
+          "demo-cases/PanTS_00000121/overlay/lesion_07.png",
+          "demo-cases/PanTS_00000121/overlay/lesion_08.png"
+        ],
+        "nearby": [
+          "demo-cases/PanTS_00000121/overlay/nearby_00.png",
+          "demo-cases/PanTS_00000121/overlay/nearby_01.png",
+          "demo-cases/PanTS_00000121/overlay/nearby_02.png",
+          "demo-cases/PanTS_00000121/overlay/nearby_03.png",
+          "demo-cases/PanTS_00000121/overlay/nearby_04.png",
+          "demo-cases/PanTS_00000121/overlay/nearby_05.png",
+          "demo-cases/PanTS_00000121/overlay/nearby_06.png",
+          "demo-cases/PanTS_00000121/overlay/nearby_07.png",
+          "demo-cases/PanTS_00000121/overlay/nearby_08.png"
+        ]
+      },
+      "findingSummary": "Anatomy-aware parse complete. Candidate region flagged for human review.",
+      "pdacSuspicionScore": 0.48,
+      "pdacSuspicionLabel": "Moderate",
+      "anatomyStatus": "Parsed",
+      "suspiciousRegionStatus": "Localized (demo visualization)",
+      "reviewQueueStatus": "Queued for radiologist second-read (workflow simulation)",
+      "findings": [
+        "Pancreas localized on axial series",
+        "Pancreatic duct / peri-pancreatic region reviewed",
+        "Candidate lesion overlay available where label present",
+        "Case queued for radiologist review in demo workflow"
+      ],
+      "recommendedWorkflow": [
+        "Radiologist second-read on primary study",
+        "Compare with prior CT if available",
+        "Consider pancreas-protocol CT, MRI/MRCP, or EUS per clinical context"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" fill="none" aria-hidden="true">
+  <rect width="720" height="300" rx="18" fill="#080f1a"/>
+  <rect x="1" y="1" width="718" height="298" rx="17" stroke="#1e3a5c" stroke-opacity="0.45"/>
+  <text x="36" y="44" fill="#c5d8ec" font-family="system-ui,sans-serif" font-size="15" font-weight="600">Retrospective archive analysis</text>
+  <text x="36" y="66" fill="#5a7a9a" font-family="system-ui,sans-serif" font-size="11">Illustrative workflow metrics · not patient data</text>
+  <g transform="translate(36, 92)">
+    <rect width="150" height="72" rx="10" fill="#0c1624" stroke="#2a4a68"/>
+    <rect x="12" y="14" width="60" height="6" rx="2" fill="#1e3550"/>
+    <text x="12" y="52" fill="#7dd8c0" font-family="system-ui,sans-serif" font-size="18" font-weight="600">Missed</text>
+    <text x="12" y="68" fill="#6a8ab0" font-family="system-ui,sans-serif" font-size="10">opportunity cases</text>
+    <rect x="186" width="150" height="72" rx="10" fill="#0c1624" stroke="#2a4a68"/>
+    <rect x="198" y="14" width="70" height="6" rx="2" fill="#1e3550"/>
+    <text x="198" y="52" fill="#5ec8e8" font-family="system-ui,sans-serif" font-size="18" font-weight="600">FP burden</text>
+    <text x="198" y="68" fill="#6a8ab0" font-family="system-ui,sans-serif" font-size="10">workload estimate</text>
+    <rect x="372" width="150" height="72" rx="10" fill="#0c1624" stroke="#2a4a68"/>
+    <rect x="384" y="14" width="50" height="6" rx="2" fill="#1e3550"/>
+    <text x="384" y="52" fill="#8ec8ff" font-family="system-ui,sans-serif" font-size="18" font-weight="600">Lead time</text>
+    <text x="384" y="68" fill="#6a8ab0" font-family="system-ui,sans-serif" font-size="10">signal timing</text>
+    <rect x="558" width="150" height="72" rx="10" fill="#0c1624" stroke="#2a4a68"/>
+    <rect x="570" y="14" width="80" height="6" rx="2" fill="#1e3550"/>
+    <text x="570" y="52" fill="#b8c8e0" font-family="system-ui,sans-serif" font-size="18" font-weight="600">Reviews</text>
+    <text x="570" y="68" fill="#6a8ab0" font-family="system-ui,sans-serif" font-size="10">radiologist queue</text>
+  </g>
+  <rect x="36" y="200" width="648" height="72" rx="10" fill="#0a121c" stroke="#2a4a68" stroke-opacity="0.35"/>
+  <rect x="52" y="222" width="120" height="8" rx="2" fill="#5ec8e8" fill-opacity="0.35"/>
+  <rect x="52" y="238" width="200" height="6" rx="2" fill="#1e3550"/>
+  <rect x="52" y="250" width="160" height="6" rx="2" fill="#1e3550" opacity="0.7"/>
+</svg>

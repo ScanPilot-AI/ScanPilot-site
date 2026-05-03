@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OncoShield | Powered by ePAI</title>
+  <meta name="description" content="OncoShield turns routine abdominal CT into an AI-assisted second-read workflow for pancreatic cancer. Built on ePAI research. Retrospective validation first. Not FDA cleared." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="navin">
+      <a class="brand" href="#top">
+        <span class="brand-main"><span class="brand-mark"></span><span>OncoShield</span></span>
+        <span class="brand-sub">Powered by ePAI</span>
+      </a>
+      <div class="links">
+        <a href="#platform">Platform</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#product">Product</a>
+        <a href="#commercial">Commercial</a>
+        <a href="#investors">Investors</a>
+        <a href="#contact">Contact</a>
+        <a class="nav-cta" href="demo/#viewer">Launch interactive demo</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section class="hero hero-v2" id="top">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Opportunistic cancer detection from routine CT</div>
+          <h1>Early cancer signals may already be in the scan.</h1>
+          <p class="lead">OncoShield turns routine abdominal CT into an AI-assisted second-read workflow, starting with pancreatic cancer.</p>
+          <div class="actions">
+            <a class="btn primary" href="demo/#viewer">Launch interactive demo</a>
+            <a class="btn link" href="https://arxiv.org/abs/2601.22134" target="_blank" rel="noreferrer">Read ePAI paper</a>
+          </div>
+          <p class="hero-disclaimer">Research/product demo only. Not for diagnosis, treatment, or patient-care decisions. Not FDA cleared.</p>
+        </div>
+        <div class="hero-visual-card" aria-label="Representative abdominal CT preview">
+          <div class="hero-device-frame">
+            <img
+              class="hero-ct-img"
+              src="assets/images/hero-ct.png"
+              alt="Representative abdominal CT (de-identified)"
+              width="900"
+              height="700"
+              loading="eager"
+              decoding="async"
+              onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='assets/images/ct-evidence.png';}else if(this.dataset.fb==='1'){this.dataset.fb='2';this.src='assets/images/CT%20Sample.png';}else{this.onerror=null;}"
+            />
+            <div class="hero-chip-row" aria-hidden="true">
+              <span class="hero-chip">Pancreas context</span>
+              <span class="hero-chip">Candidate region</span>
+              <span class="hero-chip">Second-read queue</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="proof-wrap">
+      <section class="proof-strip proof-strip-v2" aria-label="ePAI research highlights">
+        <article><b>75 / 159</b><span>prediagnostic patients detected</span></article>
+        <article><b>347 days</b><span>median lead time</span></article>
+        <article><b>95.4%</b><span>reader-study specificity</span></article>
+        <article><b>+50.3 pts</b><span>sensitivity gain vs radiologists</span></article>
+      </section>
+      <p class="proof-strip-label">ePAI research results</p>
+    </div>
+
+    <section class="section section-v2" id="platform">
+      <div class="eyebrow">Platform</div>
+      <h2>Healthcare already has the data. It lacks the early detection layer.</h2>
+      <p class="tight section-lead">Routine abdominal CT is acquired every day for unrelated reasons. Some scans may contain subtle pancreatic cancer signals months before diagnosis, but current workflows rarely surface them systematically.</p>
+      <div class="three-col top-gap">
+        <article class="card card-v2"><div class="kicker">Existing archives</div><h3>Scale on hand</h3><p>Health systems already hold large CT archives suitable for retrospective evaluation.</p></article>
+        <article class="card card-v2"><div class="kicker">Prediagnostic signal</div><h3>Earlier signal</h3><p>The opportunity is to find reviewable signals before the cancer is clinically diagnosed.</p></article>
+        <article class="card card-v2"><div class="kicker">Human-in-the-loop</div><h3>Assistive by design</h3><p>OncoShield is built for assistive second-read review, not autonomous diagnosis.</p></article>
+      </div>
+    </section>
+
+    <section class="section section-v2" id="product">
+      <div class="eyebrow">Product</div>
+      <h2>CT-PDAC Review turns research signal into a review workflow.</h2>
+      <p class="tight section-lead">The product workflow is simple: ingest CT, parse anatomy, localize suspicious pancreatic regions, score suspicion, and queue cases for radiologist review.</p>
+
+      <ol class="workflow-rail top-gap" aria-label="Product workflow steps">
+        <li class="workflow-step"><span class="workflow-num">1</span><span class="workflow-title">Ingest CT</span></li>
+        <li class="workflow-join" aria-hidden="true"></li>
+        <li class="workflow-step"><span class="workflow-num">2</span><span class="workflow-title">Parse anatomy</span></li>
+        <li class="workflow-join" aria-hidden="true"></li>
+        <li class="workflow-step"><span class="workflow-num">3</span><span class="workflow-title">Localize region</span></li>
+        <li class="workflow-join" aria-hidden="true"></li>
+        <li class="workflow-step"><span class="workflow-num">4</span><span class="workflow-title">Score suspicion</span></li>
+        <li class="workflow-join" aria-hidden="true"></li>
+        <li class="workflow-step"><span class="workflow-num">5</span><span class="workflow-title">Queue review</span></li>
+      </ol>
+
+      <article class="demo-preview-card top-gap">
+        <div class="demo-preview-card-copy">
+          <h3 class="demo-preview-title">Open the real interactive demo</h3>
+          <p>Explore public PanTS sample data with CT slices and pancreas/lesion overlays in the CT-PDAC Review Console.</p>
+          <a class="btn primary" href="demo/#viewer">Launch interactive demo</a>
+        </div>
+        <div class="demo-preview-card-visual">
+          <img
+            src="assets/images/ct-evidence.png"
+            alt="ePAI research figure: prediagnostic and diagnostic CT examples"
+            width="900"
+            height="620"
+            loading="lazy"
+            decoding="async"
+            onerror="this.onerror=null;this.src='assets/images/hero-ct.png';"
+          />
+        </div>
+      </article>
+    </section>
+
+    <section class="section section-v2" id="evidence">
+      <div class="eyebrow">Evidence</div>
+      <h2>Built on ePAI research. Productized for validation.</h2>
+      <p class="tight section-lead">The research evidence motivates the product roadmap. It does not constitute FDA clearance or a claim of performance in live clinical use.</p>
+      <div class="evidence-split top-gap">
+        <div class="evidence-metrics">
+          <div class="metric-card"><b>7,158</b><span>external patients / 6 centers</span></div>
+          <div class="metric-card"><b>AUC 0.918–0.945</b><span>external validation range</span></div>
+          <div class="metric-card"><b>75 / 159</b><span>prediagnostic detections</span></div>
+          <div class="metric-card"><b>347 days</b><span>median lead time</span></div>
+          <div class="metric-card"><b>95.4%</b><span>reader-study specificity</span></div>
+          <div class="metric-card"><b>+50.3 pts</b><span>sensitivity gain vs radiologists</span></div>
+        </div>
+        <figure class="evidence-figure-solo">
+          <div class="evidence-figure-solo-inner">
+            <img
+              src="assets/images/validation-results.png"
+              alt="ePAI validation performance across cohorts"
+              width="1100"
+              height="620"
+              loading="lazy"
+              decoding="async"
+              onerror="this.onerror=null;this.src='assets/images/reader-study.png';"
+            />
+          </div>
+          <figcaption>From the ePAI publication — validation cohorts. <a href="https://arxiv.org/abs/2601.22134" target="_blank" rel="noreferrer">Read the paper</a> for methods and limitations.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section section-v2" id="commercial">
+      <div class="eyebrow">Commercial</div>
+      <h2>The first product is paid retrospective validation.</h2>
+      <p class="tight section-lead">Before clinical deployment, health systems can run OncoShield on historical CT archives to measure missed-opportunity cases, false positive burden, lead time, and radiologist review workload.</p>
+      <div class="commercial-grid top-gap">
+        <article class="card card-v2 commercial-card"><div class="commercial-icon" aria-hidden="true"></div><h3>Historical CT archive</h3><p>Run on de-identified abdominal CT cohorts.</p></article>
+        <article class="card card-v2 commercial-card"><div class="commercial-icon" aria-hidden="true"></div><h3>Missed-opportunity analysis</h3><p>Identify cases where suspicious signals may have appeared before diagnosis.</p></article>
+        <article class="card card-v2 commercial-card"><div class="commercial-icon" aria-hidden="true"></div><h3>False-positive burden</h3><p>Estimate review workload before any live deployment.</p></article>
+        <article class="card card-v2 commercial-card"><div class="commercial-icon" aria-hidden="true"></div><h3>Validation package</h3><p>Deliver a clinical utility report for design partners, publications, and future prospective studies.</p></article>
+      </div>
+    </section>
+
+    <section class="section section-v2" id="investors">
+      <div class="eyebrow">Investors</div>
+      <h2>Why this can become a company.</h2>
+      <div class="investors-grid top-gap">
+        <article class="card card-v2"><h3>Hospitals already have the data</h3><p>No new imaging modality required to begin retrospective validation.</p></article>
+        <article class="card card-v2"><h3>Research-use revenue before FDA clearance</h3><p>Paid archive studies can precede prospective deployment.</p></article>
+        <article class="card card-v2"><h3>Clear path from retrospective to silent prospective</h3><p>Workflow evidence can graduate with governance and partners.</p></article>
+        <article class="card card-v2"><h3>Expands from PDAC to opportunistic cancer detection</h3><p>Same technical pattern can extend across tumor types over time.</p></article>
+      </div>
+    </section>
+
+    <section class="cta cta-v2" id="contact">
+      <div class="eyebrow">Contact</div>
+      <h2>Turn routine CT into an earlier cancer detection workflow.</h2>
+      <p class="cta-lead">OncoShield is opening conversations with health systems, imaging networks, translational teams, and investors.</p>
+      <div class="cta-actions">
+        <a class="btn primary" href="demo/#viewer">Launch interactive demo</a>
+        <a class="btn" href="mailto:szhu71@jh.edu?subject=Discuss%20OncoShield%20Retrospective%20Validation">Discuss validation</a>
+      </div>
+      <p class="compliance">Research/product demo only. Not for diagnosis, treatment, or patient-care decisions. Not FDA cleared.</p>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <span>OncoShield · Powered by ePAI</span>
+    <span><a href="mailto:szhu71@jh.edu">szhu71@jh.edu</a></span>
+  </footer>
+</body>
+</html>
