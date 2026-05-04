@@ -1,21 +1,83 @@
 (function () {
   "use strict";
 
-  const ASSET_BASE = "../assets/";
-  const DATA_URL = ASSET_BASE + "data/demoCases.json";
-
-  const IS_DEV =
-    typeof location !== "undefined" &&
-    (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /[?&]debug=1\b/.test(location.search));
-
-  function devWarn() {
-    if (IS_DEV && typeof console !== "undefined" && console.warn) console.warn.apply(console, arguments);
-  }
+  /** Set true temporarily to debug paths on GitHub Pages; keep false for production. */
+  const DEBUG_DEMO = false;
 
   /**
-   * State keys are decoupled from PNG file prefixes (e.g. duct → duct_XX.png).
-   * zIndex: nearby at bottom of overlay stack, lesion on top so thin duct remains visible.
+   * Paths relative to the demo page (../assets/...) — used as fallback when script URL is unavailable.
+   * Never use root-relative `/assets/...` (breaks GitHub Pages project sites).
    */
+  const DEMO_BASE_REL = "../assets/demo-cases/";
+  const DATA_PATH_REL = "../assets/data/demoCases.json";
+  const MODEL_PATH_REL = "../assets/models/3d-pancreas.glb";
+
+  /**
+   * Resolve the assets directory as an absolute URL (from this script’s location under assets/js/).
+   * Falls back to resolving DATA_PATH_REL against the current page so local and /ScanPilot-site/demo/ both work.
+   */
+  function getAssetRootHref() {
+    var sc = document.currentScript;
+    if (sc && sc.src) {
+      try {
+        return new URL("../", new URL(sc.src, location.href)).href;
+      } catch (e1) {}
+    }
+    try {
+      return new URL("../assets/", location.href).href;
+    } catch (e2) {
+      return "";
+    }
+  }
+
+  var ASSET_ROOT = getAssetRootHref();
+  var DATA_PATH = ASSET_ROOT
+    ? new URL("data/demoCases.json", ASSET_ROOT).href
+    : new URL(DATA_PATH_REL, location.href).href;
+  var DEMO_BASE = ASSET_ROOT
+    ? new URL("demo-cases/", ASSET_ROOT).href
+    : new URL(DEMO_BASE_REL, location.href).href;
+  var MODEL_URL = ASSET_ROOT
+    ? new URL("models/3d-pancreas.glb", ASSET_ROOT).href
+    : new URL(MODEL_PATH_REL, location.href).href;
+
+  function padSlice(index) {
+    return String(index).padStart(2, "0");
+  }
+
+  function getCaseBasePath(caseId) {
+    return DEMO_BASE + encodeURIComponent(caseId);
+  }
+
+  function getCtPath(caseId, sliceIndex) {
+    try {
+      return new URL(caseId + "/ct/" + padSlice(sliceIndex) + ".png", DEMO_BASE).href;
+    } catch (e) {
+      return getCaseBasePath(caseId) + "/ct/" + padSlice(sliceIndex) + ".png";
+    }
+  }
+
+  function getOverlayPath(caseId, layerPrefix, sliceIndex) {
+    try {
+      return new URL(
+        caseId + "/overlay/" + layerPrefix + "_" + padSlice(sliceIndex) + ".png",
+        DEMO_BASE
+      ).href;
+    } catch (e) {
+      return getCaseBasePath(caseId) + "/overlay/" + layerPrefix + "_" + padSlice(sliceIndex) + ".png";
+    }
+  }
+
+  function debugDemoLog() {
+    if (!DEBUG_DEMO || typeof console === "undefined" || !console.log) return;
+    console.log.apply(console, arguments);
+  }
+
+  function devWarn() {
+    if (DEBUG_DEMO && typeof console !== "undefined" && console.warn) console.warn.apply(console, arguments);
+  }
+
+  /** Stack order: nearby bottom, lesion top (duct stays visible above nearby). */
   const OVERLAY_LAYERS = {
     nearby: {
       label: "Nearby anatomy",
@@ -109,6 +171,8 @@
   const btn3dToggle = document.getElementById("btn3dToggle");
   const panel3dBody = document.getElementById("panel3dBody");
   const modelHost = document.getElementById("modelHost");
+  const demoManifestError = document.getElementById("demoManifestError");
+  const viewerCtError = document.getElementById("viewerCtError");
 
   Object.entries(OVERLAY_LAYERS).forEach(function ([key, cfg]) {
     const el = layerElements[key];
@@ -132,8 +196,9 @@
   /** True after “Run ScanPilot review” completes for the current case */
   let queueSimulated = false;
 
-  function assetUrl(rel) {
-    return ASSET_BASE + String(rel).replace(/^\/+/, "");
+  function getSliceCount(c) {
+    if (!c) return 9;
+    return Math.max(1, c.sliceCount || 9);
   }
 
   function normalizeCase(raw) {
@@ -141,7 +206,7 @@
     c.id = c.id || c.caseId;
     c.caseId = c.id;
     c.displayName = c.displayName || c.id;
-    c.sliceCount = c.sliceCount || (c.ctSlices && c.ctSlices.length) || 9;
+    c.sliceCount = getSliceCount(c);
     c.defaultSlice =
       typeof c.defaultSlice === "number"
         ? Math.max(0, Math.min(c.defaultSlice, c.sliceCount - 1))
@@ -174,35 +239,44 @@
     c.demoDisclaimer =
       c.demoDisclaimer ||
       "Illustrative demo score only — not a calibrated clinical model output.";
-    const base = c.basePath || "demo-cases/" + c.id;
-    if (!c.ctSlices || !c.ctSlices.length) {
-      c.ctSlices = [];
-      for (let i = 0; i < c.sliceCount; i++) {
-        const p = String(i).padStart(2, "0");
-        c.ctSlices.push(base + "/ct/" + p + ".png");
-      }
-    }
-    if (!c.overlays) c.overlays = {};
-    LAYER_ORDER.forEach(function (key) {
-      const prefix = OVERLAY_LAYERS[key].filePrefix;
-      if (!c.overlays[key] || !c.overlays[key].length) {
-        c.overlays[key] = [];
-        for (let i = 0; i < c.sliceCount; i++) {
-          const p = String(i).padStart(2, "0");
-          c.overlays[key].push(base + "/overlay/" + prefix + "_" + p + ".png");
-        }
-      }
-    });
+    delete c.basePath;
+    delete c.ctSlices;
+    delete c.overlays;
     return c;
+  }
+
+  function showManifestError(message) {
+    if (!demoManifestError) return;
+    demoManifestError.textContent = message;
+    demoManifestError.hidden = false;
+  }
+
+  function hideManifestError() {
+    if (!demoManifestError) return;
+    demoManifestError.hidden = true;
+    demoManifestError.textContent = "";
+  }
+
+  function setViewerCtError(message) {
+    if (!viewerCtError) return;
+    viewerCtError.textContent = message;
+    viewerCtError.hidden = false;
+  }
+
+  function clearViewerCtError() {
+    if (!viewerCtError) return;
+    viewerCtError.hidden = true;
+    viewerCtError.textContent = "";
   }
 
   function getCase() {
     return bundle && bundle.cases[caseIndex] ? bundle.cases[caseIndex] : null;
   }
 
-  function bindImageError(img, path) {
+  function bindOverlayImageError(img, path) {
     img.onerror = function () {
-      devWarn("[ScanPilot demo] Missing or failed image:", path);
+      console.error("[ScanPilot demo] Overlay failed to load:", path);
+      devWarn("[ScanPilot demo] Missing or failed overlay:", path);
       img.removeAttribute("src");
       img.classList.remove("is-visible");
     };
@@ -211,14 +285,32 @@
     };
   }
 
+  function bindCtImage(ctPath, caseIdForAlt) {
+    ctImage.onload = function () {
+      clearViewerCtError();
+      ctImage.setAttribute("alt", "Axial CT slice " + (sliceIndex + 1) + " for " + caseIdForAlt);
+    };
+    ctImage.onerror = function () {
+      console.error("[ScanPilot demo] CT slice failed to load:", ctPath);
+      ctImage.removeAttribute("src");
+      ctImage.removeAttribute("alt");
+      setViewerCtError(
+        "Could not load this CT slice. Check that assets resolve from the demo folder. Attempted path: " +
+          ctPath
+      );
+    };
+  }
+
   /**
    * Recompose CT viewer: case, slice, layer toggles, opacity, window preset, zoom.
+   * Image URLs always come from getCtPath / getOverlayPath (never JSON paths or root-relative /assets/).
    */
   function renderViewer() {
     const c = getCase();
-    if (!c || !c.ctSlices || !c.ctSlices.length) return;
+    if (!c || !c.id) return;
 
-    const max = c.ctSlices.length - 1;
+    const n = getSliceCount(c);
+    const max = n - 1;
     sliceIndex = Math.max(0, Math.min(sliceIndex, max));
     sliceSlider.min = "0";
     sliceSlider.max = String(max);
@@ -228,33 +320,27 @@
     sliceSlider.setAttribute("aria-valuetext", "Slice " + (sliceIndex + 1) + " of " + (max + 1));
 
     const i = sliceIndex;
-    const ctPath = assetUrl(c.ctSlices[i]);
-    ctImage.src = ctPath;
-    ctImage.alt = "Axial CT slice " + (sliceIndex + 1) + " for " + c.id;
-    bindImageError(ctImage, ctPath);
+    const ctPath = getCtPath(c.id, i);
+    debugDemoLog("DATA_PATH", DATA_PATH);
+    debugDemoLog("current case", c.id, "slice", i, "CT", ctPath);
+    bindCtImage(ctPath, c.id);
+    if (ctImage.getAttribute("src") !== ctPath) {
+      clearViewerCtError();
+      ctImage.src = ctPath;
+    }
 
-    const ov = c.overlays || {};
     LAYER_ORDER.forEach(function (key) {
       const el = layerElements[key];
       if (!el) return;
-      const arr = ov[key];
-      const rel = arr && arr[i];
-      const want = !!(rel && layerVisibility[key]);
-      if (rel) {
-        const url = assetUrl(rel);
-        if (el.getAttribute("src") !== url) {
-          el.src = url;
-          bindImageError(el, url);
-        }
-        el.classList.toggle("is-visible", want);
-        if (!want) {
-          /* keep src for next toggle; visibility is opacity-driven */
-        }
-      } else {
-        devWarn("[ScanPilot demo] No overlay path for layer", key, "slice", i, "case", c.id);
-        el.removeAttribute("src");
-        el.classList.remove("is-visible");
+      const prefix = OVERLAY_LAYERS[key].filePrefix;
+      const url = getOverlayPath(c.id, prefix, i);
+      debugDemoLog("overlay", key, url);
+      const want = !!layerVisibility[key];
+      if (el.getAttribute("src") !== url) {
+        el.src = url;
+        bindOverlayImageError(el, url);
       }
+      el.classList.toggle("is-visible", want);
     });
 
     viewerImageStack.style.setProperty("--overlay-fill-opacity", String(overlayOpacity));
@@ -334,7 +420,7 @@
 
   function startCine() {
     const c = getCase();
-    if (!c || !c.ctSlices || c.ctSlices.length < 2) return;
+    if (!c || getSliceCount(c) < 2) return;
     stopCine();
     cinePlaying = true;
     if (btnCine) {
@@ -342,7 +428,9 @@
       btnCine.textContent = "❚❚";
     }
     cineTimer = setInterval(function () {
-      const max = c.ctSlices.length - 1;
+      var cur = getCase();
+      if (!cur) return;
+      var max = getSliceCount(cur) - 1;
       sliceIndex = sliceIndex >= max ? 0 : sliceIndex + 1;
       renderViewer();
     }, 750);
@@ -370,7 +458,7 @@
     row("Source", c.source);
     row("Status", c.anatomyStatus);
     row("Series", "Axial");
-    row("Slices loaded", String(c.sliceCount || c.ctSlices.length));
+    row("Slices loaded", String(getSliceCount(c)));
     row(
       "Second-read queue",
       queueSimulated ? "Second-read requested (workflow simulation)" : "Idle — run agent to enqueue (demo)"
@@ -609,7 +697,7 @@
       .then(function () {
         modelHost.innerHTML = "";
         const mv = document.createElement("model-viewer");
-        mv.setAttribute("src", assetUrl("models/3d-pancreas.glb"));
+        mv.setAttribute("src", MODEL_URL);
         mv.setAttribute("camera-controls", "");
         mv.setAttribute("touch-action", "pan-y");
         mv.setAttribute("shadow-intensity", "1");
@@ -659,8 +747,8 @@
     btnSliceNext.addEventListener("click", function () {
       stopCine();
       const c = getCase();
-      if (!c || !c.ctSlices) return;
-      sliceIndex = Math.min(c.ctSlices.length - 1, sliceIndex + 1);
+      if (!c) return;
+      sliceIndex = Math.min(getSliceCount(c) - 1, sliceIndex + 1);
       renderViewer();
     });
     btnCine.addEventListener("click", function () {
@@ -721,7 +809,7 @@
         e.preventDefault();
         stopCine();
         const c = getCase();
-        if (c && c.ctSlices) sliceIndex = Math.min(c.ctSlices.length - 1, sliceIndex + 1);
+        if (c) sliceIndex = Math.min(getSliceCount(c) - 1, sliceIndex + 1);
         renderViewer();
       } else if (e.code === "Space") {
         e.preventDefault();
@@ -750,24 +838,55 @@
 
   function initCaseSelector() {
     caseSelect.innerHTML = "";
-    if (!bundle) return;
+    if (!bundle || !bundle.cases || !bundle.cases.length) return;
     bundle.cases.forEach(function (c, idx) {
       var opt = document.createElement("option");
       opt.value = String(idx);
       opt.textContent = c.displayName || c.id;
       caseSelect.appendChild(opt);
     });
-    caseSelect.value = String(caseIndex);
+    caseSelect.disabled = false;
+    caseSelect.value = String(Math.min(caseIndex, bundle.cases.length - 1));
+    caseIndex = parseInt(caseSelect.value, 10) || 0;
+  }
+
+  function showLoadFailureUi() {
+    showManifestError(
+      "Demo case manifest failed to load. Check asset paths. Expected data at a path like ../assets/data/demoCases.json relative to this demo page."
+    );
+    caseSelect.innerHTML = "";
+    var opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "—";
+    caseSelect.appendChild(opt);
+    caseSelect.disabled = true;
+    if (caseMetaDl) {
+      caseMetaDl.innerHTML = "<dt>Status</dt><dd>Manifest unavailable</dd>";
+    }
+    if (fSafety) {
+      fSafety.textContent =
+        "Demo case manifest failed to load. Check asset paths. Serve the site over HTTP (not file://) if testing locally.";
+    }
   }
 
   async function load() {
+    hideManifestError();
     try {
-      var res = await fetch(DATA_URL, { cache: "no-cache" });
+      var res = await fetch(DATA_PATH, { cache: "no-cache" });
       if (!res.ok) throw new Error("Failed to load demo metadata (" + res.status + ")");
       bundle = await res.json();
       if (!bundle.cases || !bundle.cases.length) throw new Error("No demo cases in JSON");
 
       bundle.cases = bundle.cases.map(normalizeCase);
+
+      debugDemoLog("DATA_PATH", DATA_PATH);
+      debugDemoLog("DEMO_BASE", DEMO_BASE);
+      debugDemoLog("MODEL_URL", MODEL_URL);
+      debugDemoLog("loaded case count", bundle.cases.length);
+      debugDemoLog(
+        "sample CT path",
+        bundle.cases[0] ? getCtPath(bundle.cases[0].id, 0) : "(none)"
+      );
 
       initLayerVisibility();
       buildLayerPills();
@@ -785,13 +904,11 @@
       renderAll();
       bind();
       revealOnScroll();
+      hideManifestError();
     } catch (err) {
       console.error(err);
-      if (caseMetaDl) {
-        caseMetaDl.innerHTML = "<dt>Status</dt><dd>Load error</dd>";
-      }
-      fSafety.textContent =
-        "Could not load demo assets. Serve the site over HTTP (not file://) so JSON and images resolve.";
+      bundle = null;
+      showLoadFailureUi();
     }
   }
 

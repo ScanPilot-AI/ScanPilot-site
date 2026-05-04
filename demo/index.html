@@ -49,6 +49,7 @@
       <div class="demo-console-card" id="viewer">
         <div class="demo-console-grid">
           <div class="demo-workbench">
+            <p id="demoManifestError" class="demo-manifest-error" hidden role="alert"></p>
             <div class="demo-viewer-toolbar" aria-label="Viewer controls">
               <div class="demo-toolbar-group">
                 <button type="button" class="demo-icon-btn" id="btnSlicePrev" aria-label="Previous slice">◀</button>
@@ -67,7 +68,8 @@
 
             <div class="demo-viewer-stage" id="viewerStage" aria-label="Axial CT with segmentation overlays">
               <div class="demo-viewer-image-stack" id="viewerImageStack" data-window="abdomen">
-                <img class="demo-ct-base" id="ctImage" alt="Axial CT slice" width="512" height="512" decoding="async" />
+                <p id="viewerCtError" class="demo-viewer-ct-error" hidden role="alert"></p>
+                <img class="demo-ct-base" id="ctImage" alt="" width="512" height="512" decoding="async" />
                 <img class="demo-overlay-layer" id="olNearby" alt="" role="presentation" width="512" height="512" decoding="async" data-layer-key="nearby" />
                 <img class="demo-overlay-layer" id="olPancreas" alt="" role="presentation" width="512" height="512" decoding="async" data-layer-key="pancreas" />
                 <img class="demo-overlay-layer" id="olDuct" alt="" role="presentation" width="512" height="512" decoding="async" data-layer-key="duct" />
