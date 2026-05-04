@@ -1,4 +1,4 @@
-# OncoShield Static Site
+# ScanPilot Static Site
 
 Investor-facing marketing site plus a separate **interactive CT-PDAC Review Console** at `demo/#viewer` (PanTS static exports).
 

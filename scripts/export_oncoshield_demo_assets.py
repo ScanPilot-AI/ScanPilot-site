@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Download public PanTS (iPanTSMini) volumes from HuggingFace and export
-compressed axial PNGs + RGBA overlays for the static OncoShield /demo page.
+compressed axial PNGs + RGBA overlays for the static ScanPilot /demo page.
 
 Run from repo root (requires nibabel, numpy, pillow, scipy, requests):
   .venv/bin/python scripts/export_oncoshield_demo_assets.py

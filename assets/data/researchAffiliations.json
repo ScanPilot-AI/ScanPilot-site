@@ -1,0 +1,157 @@
+[
+  {
+    "name": "Johns Hopkins University",
+    "alt": "Johns Hopkins University",
+    "logo": "assets/logos/JHU.jpg",
+    "featured": true,
+    "order": 1
+  },
+  {
+    "name": "Stanford University",
+    "alt": "Stanford University",
+    "logo": "assets/logos/Stanford.png",
+    "featured": true,
+    "order": 2
+  },
+  {
+    "name": "University of California, San Francisco",
+    "alt": "University of California, San Francisco",
+    "logo": "assets/logos/UCSF.png",
+    "featured": true,
+    "order": 3
+  },
+  {
+    "name": "Harvard University / Mass General",
+    "alt": "Harvard University and Massachusetts General Hospital",
+    "logo": "assets/logos/Harvard.svg",
+    "featured": true,
+    "order": 4
+  },
+  {
+    "name": "University of Illinois Urbana-Champaign",
+    "alt": "University of Illinois Urbana-Champaign",
+    "logo": "assets/logos/UIUC.png",
+    "featured": true,
+    "order": 5
+  },
+  {
+    "name": "University of Toronto",
+    "alt": "University of Toronto",
+    "logo": "assets/logos/UOT.avif",
+    "featured": true,
+    "order": 6
+  },
+  {
+    "name": "DKFZ",
+    "alt": "DKFZ",
+    "logo": "assets/logos/DKFZ.png",
+    "featured": true,
+    "order": 7
+  },
+  {
+    "name": "NVIDIA",
+    "alt": "NVIDIA",
+    "logo": "assets/logos/NVIDIA.jpg",
+    "featured": true,
+    "order": 8
+  },
+  {
+    "name": "Meta",
+    "alt": "Meta",
+    "logo": "assets/logos/Meta.jpg",
+    "featured": true,
+    "order": 9
+  },
+  {
+    "name": "Alibaba DAMO Academy",
+    "featured": false
+  },
+  {
+    "name": "China Medical University",
+    "featured": false
+  },
+  {
+    "name": "City of Hope",
+    "featured": false
+  },
+  {
+    "name": "Dalian University of Technology",
+    "featured": false
+  },
+  {
+    "name": "Emory University",
+    "featured": false
+  },
+  {
+    "name": "Guangdong Provincial People's Hospital",
+    "featured": false
+  },
+  {
+    "name": "Jagiellonian University",
+    "featured": false
+  },
+  {
+    "name": "Johns Hopkins Medicine",
+    "featured": false
+  },
+  {
+    "name": "New York University",
+    "featured": false
+  },
+  {
+    "name": "Northwestern Polytechnical University",
+    "featured": false
+  },
+  {
+    "name": "Qilu Hospital of Shandong University",
+    "featured": false
+  },
+  {
+    "name": "Seoul National University Hospital",
+    "featured": false
+  },
+  {
+    "name": "Shengjing Hospital of China Medical University",
+    "featured": false
+  },
+  {
+    "name": "Shandong First Medical University",
+    "featured": false
+  },
+  {
+    "name": "Shanghai Jiao Tong University",
+    "featured": false
+  },
+  {
+    "name": "Southeast University Zhongda Hospital",
+    "featured": false
+  },
+  {
+    "name": "Stony Brook University",
+    "featured": false
+  },
+  {
+    "name": "University of Alberta",
+    "featured": false
+  },
+  {
+    "name": "University of California, Santa Cruz",
+    "featured": false
+  },
+  {
+    "name": "University Hospital Basel",
+    "featured": false
+  },
+  {
+    "name": "University Hospital Essen",
+    "featured": false
+  },
+  {
+    "name": "University of Regensburg",
+    "featured": false
+  },
+  {
+    "name": "Zhejiang University School of Medicine",
+    "featured": false
+  }
+]

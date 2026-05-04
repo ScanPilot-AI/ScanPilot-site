@@ -212,7 +212,7 @@
       console.error(e);
       demoCaseSource.textContent = "Load error";
       fSummary.textContent =
-        "Could not load demo assets. Run `python scripts/export_oncoshield_demo_assets.py` from the repo root, then serve the site over HTTP (not file://).";
+        "Could not load demo assets. Run the demo export script from the repository root, then serve the site over HTTP (not file://).";
     }
   }
 
