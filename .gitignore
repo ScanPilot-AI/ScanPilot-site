@@ -18,6 +18,9 @@ __pycache__/
 .venv/
 venv/
 
+# TypeScript incremental build info (local only)
+*.tsbuildinfo
+
 # build outputs
 dist/
 build/
