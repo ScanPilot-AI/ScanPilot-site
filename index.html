@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ScanPilot | Powered by ePAI</title>
-  <meta name="description" content="ScanPilot turns routine abdominal CT into an AI-assisted second-read workflow for pancreatic cancer. Built on ePAI research. Retrospective validation first. Not FDA cleared." />
+  <meta name="description" content="Clinical-grade oncology imaging infrastructure for medical AI companies. ScanPilot turns routine abdominal CT into an AI-assisted second-read workflow for pancreatic cancer, powered by ePAI research. Retrospective validation first. Not FDA cleared." />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
-<body>
+<body class="scanpilot-marketing">
   <nav class="nav">
     <div class="navin">
       <a class="brand" href="#top">
@@ -22,6 +22,7 @@
         <a href="#commercial">Commercial</a>
         <a href="#investors">Investors</a>
         <a href="#contact">Contact</a>
+        <a href="product/">Infrastructure console</a>
         <a class="nav-cta" href="demo/#viewer">Launch interactive demo</a>
       </div>
     </div>
@@ -33,6 +34,8 @@
         <div class="hero-copy">
           <div class="eyebrow">Opportunistic cancer detection from routine CT</div>
           <h1>Early cancer signals may already be in the scan.</h1>
+          <p class="hero-pitch-primary">Clinical-grade oncology imaging infrastructure for medical AI companies.</p>
+          <p class="hero-pitch-secondary">The data infrastructure layer powering the next generation of oncology AI.</p>
           <p class="lead">ScanPilot turns routine abdominal CT into an AI-assisted second-read workflow, starting with pancreatic cancer.</p>
           <div class="actions">
             <a class="btn primary" href="demo/#viewer">Launch interactive demo</a>
@@ -92,6 +95,7 @@
     <section class="section section-v2" id="platform">
       <div class="eyebrow">Platform</div>
       <h2>Healthcare already has the data. It lacks the early detection layer.</h2>
+      <p class="section-pitch">The data infrastructure layer powering the next generation of oncology AI.</p>
       <p class="tight section-lead">Routine abdominal CT is acquired every day for unrelated reasons. Some scans may contain subtle pancreatic cancer signals months before diagnosis, but current workflows rarely surface them systematically.</p>
       <div class="three-col top-gap">
         <article class="card card-v2"><div class="kicker">Existing archives</div><h3>Scale on hand</h3><p>Health systems already hold large CT archives suitable for retrospective evaluation.</p></article>
@@ -103,6 +107,7 @@
     <section class="section section-v2" id="product">
       <div class="eyebrow">Product</div>
       <h2>CT-PDAC Review turns research signal into a review workflow.</h2>
+      <p class="section-pitch">The data infrastructure layer powering the next generation of oncology AI.</p>
       <p class="tight section-lead">The product workflow is simple: ingest CT, parse anatomy, localize suspicious pancreatic regions, score suspicion, and queue cases for radiologist review.</p>
 
       <ol class="workflow-rail top-gap" aria-label="Product workflow steps">
@@ -121,7 +126,10 @@
         <div class="demo-preview-card-copy">
           <h3 class="demo-preview-title">Open the real interactive demo</h3>
           <p>Explore public PanTS sample data with CT slices and pancreas/lesion overlays in the CT-PDAC Review Console.</p>
-          <a class="btn primary" href="demo/#viewer">Launch interactive demo</a>
+          <div class="actions">
+            <a class="btn primary" href="demo/#viewer">Launch interactive demo</a>
+            <a class="btn" href="product/">Infrastructure console</a>
+          </div>
         </div>
         <div class="demo-preview-card-visual">
           <img
@@ -170,7 +178,8 @@
     <section class="section section-v2" id="commercial">
       <div class="eyebrow">Commercial</div>
       <h2>The first product is paid retrospective validation.</h2>
-      <p class="tight section-lead">Before clinical deployment, health systems can run ScanPilot on historical CT archives to measure missed-opportunity cases, false positive burden, lead time, and radiologist review workload.</p>
+      <p class="section-pitch">The data infrastructure layer powering the next generation of oncology AI.</p>
+      <p class="tight section-lead">For research-validated retrospective programs, health systems can run ScanPilot on historical CT archives to measure missed-opportunity cases, false positive burden, lead time, and radiologist review workload.</p>
       <div class="commercial-grid top-gap">
         <article class="card card-v2 commercial-card"><div class="commercial-icon" aria-hidden="true"></div><h3>Historical CT archive</h3><p>Run on de-identified abdominal CT cohorts.</p></article>
         <article class="card card-v2 commercial-card"><div class="commercial-icon" aria-hidden="true"></div><h3>Missed-opportunity analysis</h3><p>Identify cases where suspicious signals may have appeared before diagnosis.</p></article>
@@ -193,11 +202,12 @@
     <section class="cta cta-v2" id="contact">
       <div class="eyebrow">Contact</div>
       <h2>Turn routine CT into an earlier cancer detection workflow.</h2>
-      <p class="cta-lead">ScanPilot is opening conversations with health systems, imaging networks, translational teams, and investors.</p>
+      <p class="cta-lead">ScanPilot is opening conversations with health systems, imaging networks, translational teams, medical AI companies, and investors.</p>
       <div class="cta-actions">
         <a class="btn primary" href="demo/#viewer">Launch interactive demo</a>
-        <a class="btn" href="mailto:szhu71@jh.edu?subject=Discuss%20ScanPilot%20Retrospective%20Validation">Discuss validation</a>
+        <a class="btn btn-secondary-quiet" href="mailto:szhu71@jh.edu?subject=Discuss%20ScanPilot%20Retrospective%20Validation">Discuss validation</a>
       </div>
+      <p class="cta-infra-caption">Infrastructure console for cohort operations, weak labels, model API, and validation exports.</p>
       <p class="compliance">Research/product demo only. Not for diagnosis, treatment, or patient-care decisions. Not FDA cleared.</p>
     </section>
   </main>
