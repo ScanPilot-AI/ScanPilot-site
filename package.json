@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite product/index.html",
+    "dev": "vite",
+    "dev:product": "vite --open /product/",
     "build": "tsc -b && vite build && node scripts/postbuild-copy.mjs",
     "preview": "vite preview"
   },

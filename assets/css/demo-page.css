@@ -18,6 +18,31 @@
   padding-bottom: 32px;
 }
 
+.demo-infra-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin: 24px 0 8px;
+  padding: 18px 22px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.demo-infra-banner p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #a8b0bd;
+  max-width: 52ch;
+  line-height: 1.45;
+}
+
+.demo-infra-banner .btn {
+  flex-shrink: 0;
+}
+
 .demo-nav {
   position: sticky;
   top: 0;

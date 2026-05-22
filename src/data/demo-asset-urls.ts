@@ -1,21 +1,16 @@
-const rawPng = import.meta.glob("../../assets/demo-cases/**/*.png", {
-  eager: true,
-  query: "?url",
-  import: "default",
-}) as Record<string, string>;
-
-const urlByRel = new Map<string, string>();
-
-for (const [modulePath, href] of Object.entries(rawPng)) {
-  const idx = modulePath.indexOf("demo-cases/");
-  if (idx === -1) continue;
-  const rel = modulePath.slice(idx + "demo-cases/".length);
-  urlByRel.set(rel.replace(/^\.\//, ""), href);
+/**
+ * Public demo slice paths — no import.meta.glob so the product app boots instantly.
+ * Files live under assets/demo-cases/ (served at /assets/demo-cases/ in dev and dist).
+ */
+function assetBase(): string {
+  const base = import.meta.env.BASE_URL || "/";
+  const normalized = base.endsWith("/") ? base : `${base}/`;
+  return `${normalized}assets/demo-cases`;
 }
 
 export function demoAssetUrl(...segments: string[]): string {
   const key = segments.filter(Boolean).join("/");
-  return urlByRel.get(key) ?? "";
+  return `${assetBase()}/${key}`;
 }
 
 export function ctSliceUrl(caseFolder: string, sliceIndex: number): string {

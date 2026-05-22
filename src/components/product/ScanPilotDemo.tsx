@@ -1,111 +1,147 @@
+import { Suspense, lazy } from "react";
 import {
   DemoWorkspaceProvider,
   useDemoWorkspace,
   type DemoSection,
 } from "../../context/DemoWorkspaceContext";
-import { hasScanPilotApi } from "../../lib/scanpilot-api";
+import {
+  hasScanPilotApi,
+  isCtAnalysisLive,
+  isCtAnalysisMockMode,
+} from "../../lib/scanpilot-api";
 import {
   DATASET_COHORTS,
   getDemoCase,
 } from "../../data/scanpilot-demo-data";
-import { OverviewDashboard } from "./OverviewDashboard";
-import { DatasetConsole } from "./DatasetConsole";
-import { CohortBuilder } from "./CohortBuilder";
-import { LabelPipeline } from "./LabelPipeline";
-import { CaseViewer } from "./CaseViewer";
-import { ModelApiPanel } from "./ModelApiPanel";
-import { ValidationDashboard } from "./ValidationDashboard";
-import { ComplianceReadiness } from "./ComplianceReadiness";
-import { ExportPackage } from "./ExportPackage";
+import { CTAnalysisSandbox } from "./CTAnalysisSandbox";
 
-const NAV: { id: DemoSection; label: string; glyph: string }[] = [
-  { id: "overview", label: "Overview", glyph: "◇" },
-  { id: "dataset", label: "Dataset Console", glyph: "▦" },
-  { id: "cohort", label: "Cohort Builder", glyph: "◎" },
-  { id: "labels", label: "Label Pipeline", glyph: "→" },
-  { id: "viewer", label: "Case Viewer", glyph: "◫" },
-  { id: "api", label: "Model API", glyph: "{}" },
-  { id: "validation", label: "Validation", glyph: "∿" },
-  { id: "compliance", label: "Compliance", glyph: "✓" },
-  { id: "export", label: "Export Package", glyph: "⎘" },
+const DatasetConsole = lazy(() =>
+  import("./DatasetConsole").then((m) => ({ default: m.DatasetConsole }))
+);
+const CohortBuilder = lazy(() =>
+  import("./CohortBuilder").then((m) => ({ default: m.CohortBuilder }))
+);
+const LabelPipeline = lazy(() =>
+  import("./LabelPipeline").then((m) => ({ default: m.LabelPipeline }))
+);
+const CaseViewer = lazy(() =>
+  import("./CaseViewer").then((m) => ({ default: m.CaseViewer }))
+);
+const ModelApiPanel = lazy(() =>
+  import("./ModelApiPanel").then((m) => ({ default: m.ModelApiPanel }))
+);
+const ValidationDashboard = lazy(() =>
+  import("./ValidationDashboard").then((m) => ({ default: m.ValidationDashboard }))
+);
+const ComplianceReadiness = lazy(() =>
+  import("./ComplianceReadiness").then((m) => ({ default: m.ComplianceReadiness }))
+);
+const ExportPackage = lazy(() =>
+  import("./ExportPackage").then((m) => ({ default: m.ExportPackage }))
+);
+const AIFindingsCard = lazy(() =>
+  import("./AIFindingsCard").then((m) => ({ default: m.AIFindingsCard }))
+);
+const ReviewQueue = lazy(() =>
+  import("./ReviewQueue").then((m) => ({ default: m.ReviewQueue }))
+);
+const OverviewDashboard = lazy(() =>
+  import("./OverviewDashboard").then((m) => ({ default: m.OverviewDashboard }))
+);
+
+const NAV: { id: DemoSection; label: string }[] = [
+  { id: "sandbox", label: "CT Analysis" },
+  { id: "dataset", label: "Dataset ingest" },
+  { id: "api", label: "Model API" },
+  { id: "findings", label: "AI findings" },
+  { id: "queue", label: "Review queue" },
+  { id: "validation", label: "Validation" },
+  { id: "export", label: "Export package" },
+  { id: "compliance", label: "Compliance" },
+  { id: "cohort", label: "Cohort builder" },
+  { id: "labels", label: "Label pipeline" },
+  { id: "viewer", label: "Case viewer" },
+  { id: "overview", label: "Overview" },
 ];
 
+function SectionFallback() {
+  return (
+    <div className="panel card-elevated muted" style={{ padding: 24 }}>
+      Loading module…
+    </div>
+  );
+}
+
 function WorkspaceInspector() {
-  const { selectedCohortId, selectedCaseId, activeSection } = useDemoWorkspace();
+  const { selectedCohortId, selectedCaseId, activeSection, ctAnalysisResult } =
+    useDemoWorkspace();
   const cohort = DATASET_COHORTS.find((x) => x.cohort_id === selectedCohortId);
   const kase = getDemoCase(selectedCaseId);
 
   return (
     <aside className="panel inspector card-elevated">
       <h2 className="section-title" style={{ marginTop: 0 }}>
-        Inspector
+        Workflow
       </h2>
-      <div className="meta-label">Active view</div>
+      <div className="meta-label">Active step</div>
       <div style={{ fontWeight: 600, marginBottom: 12, fontSize: 14 }}>
-        {NAV.find((n) => n.id === activeSection)?.label ?? "Overview"}
+        {NAV.find((n) => n.id === activeSection)?.label ?? "CT Analysis"}
       </div>
+      {ctAnalysisResult && (
+        <>
+          <hr className="divider" />
+          <div className="meta-label">Last sandbox session</div>
+          <code style={{ fontSize: 11, wordBreak: "break-all" }}>
+            {ctAnalysisResult.sessionId.slice(0, 18)}…
+          </code>
+        </>
+      )}
       <hr className="divider" />
       <div className="meta-label">Cohort</div>
       <div style={{ fontSize: 13 }}>
         {cohort ? `${cohort.cohort_id} · ${cohort.status}` : "None selected"}
       </div>
-      {cohort && (
-        <p className="muted" style={{ fontSize: 12 }}>
-          Readiness {Math.round(cohort.readiness * 100)}%
-        </p>
-      )}
       <hr className="divider" />
-      <div className="meta-label">Demo case</div>
+      <div className="meta-label">Reference case</div>
       <div style={{ fontSize: 13 }}>{kase.case_id}</div>
-      <p className="muted" style={{ fontSize: 12 }}>
-        {kase.scan_id} · {kase.organ} {kase.modality}
-      </p>
-      <hr className="divider" />
-      <div className="meta-label">Remote references</div>
-      <p className="muted" style={{ fontSize: 11, wordBreak: "break-all" }}>
-        <code>{kase.scan_id}</code> · <code>{kase.case_id}</code>
-        <br />
-        cohort <code>{cohort?.cohort_id ?? "—"}</code>
-      </p>
-      <hr className="divider" />
-      <div className="meta-label">Enterprise programs</div>
-      <ul className="inspector-plan-list muted">
-        <li>
-          <strong className="text-body">Research Pilot</strong> — scoped cohort,
-          API compatibility, validation bundle.
-        </li>
-        <li>
-          <strong className="text-body">Commercial Build</strong> — recurring
-          exports, QA workflows, multi-site governance.
-        </li>
-        <li>
-          <strong className="text-body">Enterprise / Pharma</strong> — evidence
-          packages, audit trails, sponsor-ready artifacts.
-        </li>
-      </ul>
-      <div className="meta-label" style={{ marginTop: 12 }}>
-        What happens next
+      <div className="disclaimer-bar" style={{ marginTop: 16 }}>
+        Research-use only. Not for diagnosis. Human review required.
       </div>
-      <ol className="inspector-next-steps muted">
-        <li>Technical scoping</li>
-        <li>Data / API compatibility review</li>
-        <li>Pilot cohort setup</li>
-        <li>Validation package delivery</li>
-      </ol>
       <a className="btn ghost secondary-button" style={{ marginTop: 12 }} href="../index.html#contact">
         Request pilot
       </a>
-      <div className="disclaimer-bar" style={{ marginTop: 16 }}>
-        Demo output for research and infrastructure evaluation only. Not
-        intended for clinical diagnosis or treatment decisions.
-      </div>
     </aside>
   );
 }
 
+function ActiveSection() {
+  const { activeSection, ctAnalysisResult } = useDemoWorkspace();
+
+  return (
+    <Suspense fallback={<SectionFallback />}>
+      {activeSection === "sandbox" && <CTAnalysisSandbox />}
+      {activeSection === "dataset" && <DatasetConsole />}
+      {activeSection === "cohort" && <CohortBuilder />}
+      {activeSection === "labels" && <LabelPipeline />}
+      {activeSection === "findings" && (
+        <AIFindingsCard result={ctAnalysisResult} />
+      )}
+      {activeSection === "queue" && <ReviewQueue />}
+      {activeSection === "viewer" && <CaseViewer />}
+      {activeSection === "api" && <ModelApiPanel />}
+      {activeSection === "validation" && <ValidationDashboard />}
+      {activeSection === "compliance" && <ComplianceReadiness />}
+      {activeSection === "export" && <ExportPackage />}
+      {activeSection === "overview" && <OverviewDashboard />}
+    </Suspense>
+  );
+}
+
 function WorkspaceBody() {
-  const { activeSection, setActiveSection } = useDemoWorkspace();
+  const { setActiveSection, activeSection } = useDemoWorkspace();
   const apiLive = hasScanPilotApi();
+  const ctLive = isCtAnalysisLive();
+  const mock = isCtAnalysisMockMode();
 
   return (
     <div className="workspace">
@@ -114,10 +150,10 @@ function WorkspaceBody() {
           <span className="ws-brand-mark" aria-hidden="true" />
           <div>
             <div className="ws-brand-title">ScanPilot</div>
-            <div className="ws-brand-sub">Imaging infrastructure</div>
+            <div className="ws-brand-sub">Infrastructure console</div>
           </div>
         </div>
-        <div className="ws-workspace-label">Workspace</div>
+        <div className="ws-workspace-label">Workflow</div>
         {NAV.map((n) => (
           <button
             key={n.id}
@@ -127,34 +163,35 @@ function WorkspaceBody() {
             }
             onClick={() => setActiveSection(n.id)}
           >
-            <span className="ws-nav-glyph" aria-hidden="true">
-              {n.glyph}
-            </span>
             {n.label}
           </button>
         ))}
         <div style={{ flex: 1 }} />
         <a className="ws-nav-btn" href="../index.html">
-          <span className="ws-nav-glyph">⌂</span>
           Back to landing
         </a>
         <a className="ws-nav-btn" href="../demo/#viewer">
-          <span className="ws-nav-glyph">▣</span>
-          Legacy CT console
+          Sample CT Viewer
         </a>
       </aside>
 
       <div className="ws-body">
         <header className="ws-topbar">
           <div className="ws-title">
-            Pancreatic Cancer Early Detection · Infrastructure workspace
+            Upload, analyze, review, and export from one console
           </div>
           <div className="ws-meta">
-            <span className="badge badge-demo">Demo workspace</span>
-            <span className={apiLive ? "badge badge-live" : "badge badge-demo"}>
-              {apiLive ? "Live API" : "API · Demo fallback"}
-            </span>
-            <span className="badge">Export · Ready (demo)</span>
+            <span className="badge pill-research">Research-use</span>
+            {mock ? (
+              <span className="badge badge-demo">Mock mode</span>
+            ) : (
+              <span className="badge badge-live">API connected</span>
+            )}
+            {ctLive && <span className="badge pill-epai">JHU/ePAI</span>}
+            <span className="badge pill-review">Human review</span>
+            {apiLive && (
+              <span className="badge badge-live">Enterprise API</span>
+            )}
           </div>
           <a
             className="btn primary primary-button"
@@ -166,15 +203,7 @@ function WorkspaceBody() {
 
         <div className="ws-main">
           <div className="stack ws-content-col">
-            {activeSection === "overview" && <OverviewDashboard />}
-            {activeSection === "dataset" && <DatasetConsole />}
-            {activeSection === "cohort" && <CohortBuilder />}
-            {activeSection === "labels" && <LabelPipeline />}
-            {activeSection === "viewer" && <CaseViewer />}
-            {activeSection === "api" && <ModelApiPanel />}
-            {activeSection === "validation" && <ValidationDashboard />}
-            {activeSection === "compliance" && <ComplianceReadiness />}
-            {activeSection === "export" && <ExportPackage />}
+            <ActiveSection />
           </div>
           <WorkspaceInspector />
         </div>

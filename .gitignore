@@ -49,3 +49,6 @@ PanTS-Viewer/flask-server/makes
 *Pitch*.pdf
 *Investor*.pdf
 *deck*.pdf
+
+# Local reference prototype, not deployed with ScanPilot-site
+PanTS-Viewer/

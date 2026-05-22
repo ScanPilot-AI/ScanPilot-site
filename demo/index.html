@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ScanPilot CT-PDAC Review Console · Demo</title>
-  <meta name="description" content="Public sample-data demonstration of ScanPilot’s CT review workflow. Research demo only. Not FDA cleared." />
+  <title>ScanPilot Sample CT Viewer</title>
+  <meta name="description" content="Explore de-identified PanTS sample cases with anatomy overlays. Research demo only. Not FDA cleared." />
   <link rel="stylesheet" href="../assets/css/style.css" />
   <link rel="stylesheet" href="../assets/css/demo-page.css" />
 </head>
@@ -23,20 +23,25 @@
         <a href="../index.html#product">Product</a>
         <a href="../index.html#commercial">Commercial</a>
         <a href="../index.html#investors">Investors</a>
-        <a class="demo-nav-active" href="#console">Interactive demo</a>
+        <a class="demo-nav-active" href="#console">Sample CT Viewer</a>
         <a href="../index.html#contact">Contact</a>
-        <a class="nav-cta" href="#console">Launch console</a>
+        <a class="nav-cta" href="../product/">Open Infrastructure Console</a>
       </div>
     </div>
   </nav>
 
   <main class="wrap demo-main">
+    <div class="demo-infra-banner" role="region" aria-label="Infrastructure console pointer">
+      <p>Looking for live CT upload and JHU/ePAI analysis? Open the Infrastructure Console.</p>
+      <a class="btn primary" href="../product/">Open Infrastructure Console</a>
+    </div>
+
     <section class="demo-console-wrap reveal visible" id="console">
       <header class="demo-command-bar">
         <div class="demo-command-bar-text">
-          <p class="demo-command-eyebrow">ScanPilot</p>
-          <h1 class="demo-command-title">ScanPilot CT-PDAC Review Console</h1>
-          <p class="demo-command-sub">AI-assisted second-read workflow for routine abdominal CT.</p>
+          <p class="demo-command-eyebrow">Sample CT Viewer</p>
+          <h1 class="demo-command-title">Explore de-identified PanTS sample cases</h1>
+          <p class="demo-command-sub">Static CT slices with pancreas, duct, and lesion overlays. Not the live upload pipeline.</p>
         </div>
         <div class="demo-command-chips" aria-label="Demo context">
           <span class="demo-chip">Public sample case</span>
@@ -236,7 +241,7 @@
         <article class="demo-prose-card reveal">
           <div class="eyebrow">Technical approach</div>
           <h2>Anatomy-aware, radiologist-in-the-loop</h2>
-          <p class="tight">This page uses static PNG exports from de-identified PanTS-style samples for fast loading. Full NIfTI / server inference lives in the separate PanTS-Viewer prototype in the repository.</p>
+          <p class="tight">This page uses static PNG exports from de-identified PanTS-style samples for fast loading. For live CT upload and JHU/ePAI analysis, open the Infrastructure Console.</p>
         </article>
       </div>
     </section>

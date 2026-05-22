@@ -1,38 +1,67 @@
 /**
- * Research affiliations: main grid (logo-only) + extended list from assets/data/researchAffiliations.json.
+ * Research affiliations: premium logo rail + extended list.
  */
 (function () {
   const wall = document.getElementById("affiliation-logo-grid");
   const extendedList = document.getElementById("affiliation-extended-list");
   if (!wall) return;
 
+  wall.classList.add("logo-grid");
+
+  function resolveBadgeClass(item) {
+    if (item.logoBadge === "light" || item.logoBadge === "dark" || item.logoBadge === "invert") {
+      return item.logoBadge;
+    }
+    if (item.lightLogo === true) return "light";
+    const name = (item.name || "").toLowerCase();
+    if (
+      name.includes("toronto") ||
+      name.includes("nvidia") ||
+      name.includes("meta") ||
+      name.includes("harvard") ||
+      name.includes("hopkins") ||
+      name.includes("illinois") ||
+      name.includes("dkfz") ||
+      name.includes("stanford") ||
+      name.includes("ucsf")
+    ) {
+      return "light";
+    }
+    return "dark";
+  }
+
   function appendMainLogoCard(container, item) {
     const logoPath = (item.logo || "").trim();
     if (!logoPath) return;
 
-    const itemWrap = document.createElement("div");
-    itemWrap.className = "affiliation-logo-item";
+    const badgeKind = resolveBadgeClass(item);
+    const tile = document.createElement("div");
+    tile.className = "logo-tile";
+
+    const badge = document.createElement("div");
+    badge.className = `logo-badge ${badgeKind}`;
 
     const altText = (item.alt || item.name || "").trim();
     const img = document.createElement("img");
     img.src = logoPath;
     img.alt = altText;
-    img.className = "affiliation-logo";
+    img.className = "logo-img";
     img.decoding = "async";
     img.loading = "lazy";
     img.referrerPolicy = "no-referrer";
 
     img.addEventListener("error", () => {
-      itemWrap.classList.add("affiliation-logo-item--error");
-      img.remove();
+      tile.classList.add("logo-tile--error");
+      badge.remove();
       const sr = document.createElement("span");
       sr.className = "affiliation-sr-only";
       sr.textContent = altText || "Affiliation logo";
-      itemWrap.appendChild(sr);
+      tile.appendChild(sr);
     });
 
-    itemWrap.appendChild(img);
-    container.appendChild(itemWrap);
+    badge.appendChild(img);
+    tile.appendChild(badge);
+    container.appendChild(tile);
   }
 
   function renderExtended(names) {
