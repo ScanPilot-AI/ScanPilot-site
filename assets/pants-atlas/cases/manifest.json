@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-26T04:26:53.901834+00:00",
+  "disclaimer": "Static demo using precomputed PanTS-derived assets. Not for clinical diagnosis.",
+  "caseCount": 5,
+  "totalExportedCtFrames": 85,
+  "totalOrganOverlayStacks": 102,
+  "uniqueOrganLayers": [
+    "adrenal_gland_left",
+    "adrenal_gland_right",
+    "aorta",
+    "celiac_artery",
+    "colon",
+    "common_bile_duct",
+    "duodenum",
+    "femur_left",
+    "femur_right",
+    "gall_bladder",
+    "kidney_left",
+    "kidney_right",
+    "liver",
+    "lung_left",
+    "lung_right",
+    "pancreas",
+    "pancreas_body",
+    "pancreas_head",
+    "pancreas_tail",
+    "pancreatic_duct",
+    "pancreatic_lesion",
+    "postcava",
+    "spleen",
+    "stomach",
+    "superior_mesenteric_artery",
+    "veins"
+  ],
+  "cases": [
+    {
+      "caseId": "PanTS_00000001",
+      "manifestPath": "assets/pants-atlas/cases/PanTS_00000001/manifest.json",
+      "sliceCount": 17,
+      "organCount": 17,
+      "hasPancreaticDuct": false,
+      "hasPancreaticLesion": false,
+      "thumbnailFrame": "assets/pants-atlas/cases/PanTS_00000001/ct/008.png"
+    },
+    {
+      "caseId": "PanTS_00000017",
+      "manifestPath": "assets/pants-atlas/cases/PanTS_00000017/manifest.json",
+      "sliceCount": 17,
+      "organCount": 19,
+      "hasPancreaticDuct": false,
+      "hasPancreaticLesion": false,
+      "thumbnailFrame": "assets/pants-atlas/cases/PanTS_00000017/ct/008.png"
+    },
+    {
+      "caseId": "PanTS_00000030",
+      "manifestPath": "assets/pants-atlas/cases/PanTS_00000030/manifest.json",
+      "sliceCount": 17,
+      "organCount": 22,
+      "hasPancreaticDuct": true,
+      "hasPancreaticLesion": false,
+      "thumbnailFrame": "assets/pants-atlas/cases/PanTS_00000030/ct/008.png"
+    },
+    {
+      "caseId": "PanTS_00000035",
+      "manifestPath": "assets/pants-atlas/cases/PanTS_00000035/manifest.json",
+      "sliceCount": 17,
+      "organCount": 23,
+      "hasPancreaticDuct": true,
+      "hasPancreaticLesion": true,
+      "thumbnailFrame": "assets/pants-atlas/cases/PanTS_00000035/ct/008.png"
+    },
+    {
+      "caseId": "PanTS_00000121",
+      "manifestPath": "assets/pants-atlas/cases/PanTS_00000121/manifest.json",
+      "sliceCount": 17,
+      "organCount": 21,
+      "hasPancreaticDuct": false,
+      "hasPancreaticLesion": false,
+      "thumbnailFrame": "assets/pants-atlas/cases/PanTS_00000121/ct/008.png"
+    }
+  ]
+}

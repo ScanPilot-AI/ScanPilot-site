@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-26T04:17:15.278714+00:00",
+  "cases": [
+    {
+      "caseId": "PanTS_00000001",
+      "displayName": "Case 00000001",
+      "organCount": 28,
+      "hasPancreaticDuct": true,
+      "hasPancreaticLesion": true,
+      "manifestPath": "assets/pants-atlas/cases/PanTS_00000001/manifest.json"
+    },
+    {
+      "caseId": "PanTS_00000017",
+      "displayName": "Case 00000017",
+      "organCount": 28,
+      "hasPancreaticDuct": true,
+      "hasPancreaticLesion": true,
+      "manifestPath": "assets/pants-atlas/cases/PanTS_00000017/manifest.json"
+    },
+    {
+      "caseId": "PanTS_00000030",
+      "displayName": "Case 00000030",
+      "organCount": 28,
+      "hasPancreaticDuct": true,
+      "hasPancreaticLesion": true,
+      "manifestPath": "assets/pants-atlas/cases/PanTS_00000030/manifest.json"
+    },
+    {
+      "caseId": "PanTS_00000035",
+      "displayName": "Case 00000035",
+      "organCount": 28,
+      "hasPancreaticDuct": true,
+      "hasPancreaticLesion": true,
+      "manifestPath": "assets/pants-atlas/cases/PanTS_00000035/manifest.json"
+    },
+    {
+      "caseId": "PanTS_00000121",
+      "displayName": "Case 00000121",
+      "organCount": 28,
+      "hasPancreaticDuct": true,
+      "hasPancreaticLesion": true,
+      "manifestPath": "assets/pants-atlas/cases/PanTS_00000121/manifest.json"
+    }
+  ]
+}

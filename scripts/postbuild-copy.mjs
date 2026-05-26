@@ -23,6 +23,15 @@ fs.copyFileSync(
   path.join(dist, "index.html")
 );
 
-// Legacy static demo + shared assets at same relative URLs from dist/.
+// Legacy static demo + PanTS Atlas PNG stacks + shared assets at same relative URLs.
 copyDir(path.join(root, "assets"), path.join(dist, "assets"));
 copyDir(path.join(root, "demo"), path.join(dist, "demo"));
+
+const atlasManifest = path.join(root, "assets", "pants-atlas", "cases", "manifest.json");
+if (fs.existsSync(atlasManifest)) {
+  console.log("PanTS Atlas assets copied with dist/assets/pants-atlas");
+} else {
+  console.warn(
+    "Warning: assets/pants-atlas missing — run scripts/export_pants_atlas_png.py before deploy"
+  );
+}

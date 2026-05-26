@@ -354,7 +354,10 @@ export function CTAnalysisSandbox() {
       </div>
 
       {(phase === "result" || ctAnalysisResult) && (
-        <AIFindingsCard result={result ?? ctAnalysisResult} />
+        <AIFindingsCard
+          result={result ?? ctAnalysisResult}
+          mode="sandbox"
+        />
       )}
     </div>
   );

@@ -1,80 +1,81 @@
 import { useDemoWorkspace } from "../../context/DemoWorkspaceContext";
+import { toPublicAssetPath } from "../../data/pants-atlas";
 
 export function ReviewQueue() {
-  const { reviewQueue, setActiveSection } = useDemoWorkspace();
+  const {
+    globalManifest,
+    atlasReady,
+    atlasLoading,
+    selectedCaseId,
+    setSelectedCaseId,
+  } = useDemoWorkspace();
+
+  if (atlasLoading) {
+    return (
+      <div className="atlas-panel">
+        <p className="muted">Loading PanTS Atlas case database…</p>
+      </div>
+    );
+  }
+
+  if (!atlasReady || !globalManifest) {
+    return (
+      <div className="atlas-panel">
+        <p className="muted">PanTS Atlas manifest unavailable. Using legacy demo cases.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="stack">
-      <div className="panel card-elevated">
-        <div className="section-head-row">
-          <div>
-            <h2 className="section-title" style={{ marginTop: 0 }}>
-              Radiologist review queue
-            </h2>
-            <p className="muted section-lead-tight">
-              Model outputs route into human review — not autonomous interpretation.
-            </p>
-          </div>
-          <span className="badge pill-research">Human review</span>
-        </div>
-
-        <div className="table-wrap">
-          <table className="data">
-            <thead>
-              <tr>
-                <th>Case ID</th>
-                <th>Source</th>
-                <th>Model status</th>
-                <th>Priority</th>
-                <th>Reviewer</th>
-                <th>Package</th>
-                <th>State</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reviewQueue.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="muted">
-                    No cases queued. Add from CT Analysis Sandbox after a run completes.
-                  </td>
-                </tr>
-              ) : (
-                reviewQueue.map((row) => (
-                  <tr key={row.caseId}>
-                    <td>
-                      <code>{row.caseId}</code>
-                    </td>
-                    <td>{row.source}</td>
-                    <td>{row.modelStatus}</td>
-                    <td>
-                      <span className={`priority-${row.reviewPriority}`}>
-                        {row.reviewPriority}
-                      </span>
-                    </td>
-                    <td>{row.assignedReviewer}</td>
-                    <td>{row.outputPackage}</td>
-                    <td>
-                      <span className={`queue-state queue-state--${row.stateKey}`}>
-                        {row.state}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <p className="muted" style={{ fontSize: 12, marginTop: 12 }}>
-          Research-use only. Not for diagnosis.{" "}
-          <button
-            type="button"
-            className="btn-link"
-            onClick={() => setActiveSection("sandbox")}
-          >
-            Run another case
-          </button>
-        </p>
+    <div className="case-database">
+      <div className="case-database-head">
+        <div className="meta-label">Case database</div>
+        <div className="case-database-count">{globalManifest.caseCount} cases</div>
+      </div>
+      <div className="case-card-list">
+        {globalManifest.cases.map((c) => {
+          const thumb = c.thumbnailFrame
+            ? toPublicAssetPath(c.thumbnailFrame)
+            : null;
+          const selected = c.caseId === selectedCaseId;
+          return (
+            <button
+              key={c.caseId}
+              type="button"
+              className={`case-card${selected ? " selected" : ""}`}
+              onClick={() => setSelectedCaseId(c.caseId)}
+            >
+              <div className="case-card-thumb">
+                {thumb ? (
+                  <img src={thumb} alt="" />
+                ) : (
+                  <div className="case-card-thumb-fallback" />
+                )}
+              </div>
+              <div className="case-card-body">
+                <div className="case-card-id">{c.caseId.replace("PanTS_", "")}</div>
+                <div className="case-card-meta">
+                  <span>{c.sliceCount} slices</span>
+                  <span>{c.organCount} layers</span>
+                </div>
+                <div className="case-card-flags">
+                  <span
+                    className={
+                      c.hasPancreaticLesion ? "flag on" : "flag off"
+                    }
+                  >
+                    Lesion {c.hasPancreaticLesion ? "yes" : "—"}
+                  </span>
+                  <span
+                    className={c.hasPancreaticDuct ? "flag on" : "flag off"}
+                  >
+                    Duct {c.hasPancreaticDuct ? "yes" : "—"}
+                  </span>
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

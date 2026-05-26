@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-26T04:17:15.278714+00:00",
+  "groups": {
+    "pancreas": "Pancreas",
+    "duct_lesion": "Duct / Lesion",
+    "adjacent_gi": "Adjacent GI",
+    "vascular": "Vascular",
+    "renal_adrenal": "Renal / Adrenal",
+    "other": "Other anatomy"
+  },
+  "organs": [
+    {
+      "id": "adrenal_gland_left",
+      "label": "Adrenal Gland Left",
+      "group": "renal_adrenal"
+    },
+    {
+      "id": "adrenal_gland_right",
+      "label": "Adrenal Gland Right",
+      "group": "renal_adrenal"
+    },
+    {
+      "id": "aorta",
+      "label": "Aorta",
+      "group": "vascular"
+    },
+    {
+      "id": "bladder",
+      "label": "Bladder",
+      "group": "renal_adrenal"
+    },
+    {
+      "id": "celiac_artery",
+      "label": "Celiac Artery",
+      "group": "vascular"
+    },
+    {
+      "id": "colon",
+      "label": "Colon",
+      "group": "adjacent_gi"
+    },
+    {
+      "id": "common_bile_duct",
+      "label": "Common Bile Duct",
+      "group": "adjacent_gi"
+    },
+    {
+      "id": "duodenum",
+      "label": "Duodenum",
+      "group": "adjacent_gi"
+    },
+    {
+      "id": "femur_left",
+      "label": "Femur Left",
+      "group": "other"
+    },
+    {
+      "id": "femur_right",
+      "label": "Femur Right",
+      "group": "other"
+    },
+    {
+      "id": "gall_bladder",
+      "label": "Gall Bladder",
+      "group": "adjacent_gi"
+    },
+    {
+      "id": "kidney_left",
+      "label": "Kidney Left",
+      "group": "renal_adrenal"
+    },
+    {
+      "id": "kidney_right",
+      "label": "Kidney Right",
+      "group": "renal_adrenal"
+    },
+    {
+      "id": "liver",
+      "label": "Liver",
+      "group": "other"
+    },
+    {
+      "id": "lung_left",
+      "label": "Lung Left",
+      "group": "other"
+    },
+    {
+      "id": "lung_right",
+      "label": "Lung Right",
+      "group": "other"
+    },
+    {
+      "id": "pancreas",
+      "label": "Pancreas",
+      "group": "pancreas"
+    },
+    {
+      "id": "pancreas_body",
+      "label": "Pancreas Body",
+      "group": "pancreas"
+    },
+    {
+      "id": "pancreas_head",
+      "label": "Pancreas Head",
+      "group": "pancreas"
+    },
+    {
+      "id": "pancreas_tail",
+      "label": "Pancreas Tail",
+      "group": "pancreas"
+    },
+    {
+      "id": "pancreatic_duct",
+      "label": "Pancreatic Duct",
+      "group": "duct_lesion"
+    },
+    {
+      "id": "pancreatic_lesion",
+      "label": "Pancreatic Lesion",
+      "group": "duct_lesion"
+    },
+    {
+      "id": "postcava",
+      "label": "Postcava",
+      "group": "vascular"
+    },
+    {
+      "id": "prostate",
+      "label": "Prostate",
+      "group": "renal_adrenal"
+    },
+    {
+      "id": "spleen",
+      "label": "Spleen",
+      "group": "other"
+    },
+    {
+      "id": "stomach",
+      "label": "Stomach",
+      "group": "adjacent_gi"
+    },
+    {
+      "id": "superior_mesenteric_artery",
+      "label": "Superior Mesenteric Artery",
+      "group": "vascular"
+    },
+    {
+      "id": "veins",
+      "label": "Veins",
+      "group": "vascular"
+    }
+  ]
+}

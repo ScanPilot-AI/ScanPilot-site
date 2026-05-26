@@ -56,7 +56,22 @@ oncoshield-site/
     requirements-demo-export.txt
 ```
 
-## Regenerating demo slices
+## PanTS Atlas (product workspace)
+
+The React Infrastructure Console at `/product/` loads **database-driven** assets from `assets/pants-atlas/` (manifest JSON + precomputed PNG stacks). Regenerate from local PanTS volumes (requires `PanTS-Viewer/PanTS/data/` on disk — not committed):
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r scripts/requirements-demo-export.txt
+.venv/bin/python scripts/build_pants_atlas_database.py
+.venv/bin/python scripts/export_pants_atlas_png.py
+.venv/bin/python scripts/audit_pants_atlas_assets.py
+npm run build
+```
+
+**Deploy note:** Commit `assets/pants-atlas/` (≈13MB PNGs + JSON). Without it, GitHub Pages shows broken thumbnails. Legacy `assets/demo-cases/` remains as fallback only.
+
+## Regenerating legacy demo slices
 
 ```bash
 .venv/bin/python scripts/export_oncoshield_demo_assets.py
