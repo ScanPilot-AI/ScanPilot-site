@@ -3,7 +3,7 @@ import { toPublicAssetPath } from "../../data/pants-atlas";
 
 export function ReviewQueue() {
   const {
-    globalManifest,
+    localAtlas,
     atlasReady,
     atlasLoading,
     selectedCaseId,
@@ -18,7 +18,7 @@ export function ReviewQueue() {
     );
   }
 
-  if (!atlasReady || !globalManifest) {
+  if (!atlasReady || !localAtlas) {
     return (
       <div className="atlas-panel">
         <p className="muted">PanTS Atlas manifest unavailable. Using legacy demo cases.</p>
@@ -30,13 +30,11 @@ export function ReviewQueue() {
     <div className="case-database">
       <div className="case-database-head">
         <div className="meta-label">Case database</div>
-        <div className="case-database-count">{globalManifest.caseCount} cases</div>
+        <div className="case-database-count">{localAtlas.caseCount} local volumes</div>
       </div>
       <div className="case-card-list">
-        {globalManifest.cases.map((c) => {
-          const thumb = c.thumbnailFrame
-            ? toPublicAssetPath(c.thumbnailFrame)
-            : null;
+        {localAtlas.cases.map((c) => {
+          const thumb = c.thumbnail ? toPublicAssetPath(c.thumbnail) : null;
           const selected = c.caseId === selectedCaseId;
           return (
             <button
@@ -53,12 +51,13 @@ export function ReviewQueue() {
                 )}
               </div>
               <div className="case-card-body">
-                <div className="case-card-id">{c.caseId.replace("PanTS_", "")}</div>
+                <div className="case-card-id">{c.caseId}</div>
                 <div className="case-card-meta">
-                  <span>{c.sliceCount} slices</span>
-                  <span>{c.organCount} layers</span>
+                  <span>{c.localFrameCount} exported slices</span>
+                  <span>{c.availableOrgans.length} overlay layers</span>
                 </div>
                 <div className="case-card-flags">
+                  <span className="clinical-badge-teal">Local atlas</span>
                   <span
                     className={
                       c.hasPancreaticLesion ? "flag on" : "flag off"

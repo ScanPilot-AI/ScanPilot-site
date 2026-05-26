@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-05-26T04:17:15.278714+00:00",
+  "generatedAt": "2026-05-26T05:19:15.575651+00:00",
   "groups": {
     "pancreas": "Pancreas",
     "duct_lesion": "Duct / Lesion",
@@ -76,11 +76,6 @@
       "group": "renal_adrenal"
     },
     {
-      "id": "liver",
-      "label": "Liver",
-      "group": "other"
-    },
-    {
       "id": "lung_left",
       "label": "Lung Left",
       "group": "other"
@@ -129,11 +124,6 @@
       "id": "prostate",
       "label": "Prostate",
       "group": "renal_adrenal"
-    },
-    {
-      "id": "spleen",
-      "label": "Spleen",
-      "group": "other"
     },
     {
       "id": "stomach",

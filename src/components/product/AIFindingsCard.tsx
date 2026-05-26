@@ -193,10 +193,10 @@ function AtlasFindingsCard() {
   if (!selectedCaseManifest) {
     return (
       <div className="atlas-panel findings-panel">
-        <div className="meta-label">AI findings</div>
+        <div className="meta-label">Layer-derived evidence</div>
         <p className="muted" style={{ fontSize: 13 }}>
-          Select a PanTS Atlas case to generate demo findings from available organ
-          layers.
+          Select a bundled local CT volume to summarize anatomy context from exported
+          segmentation layers.
         </p>
       </div>
     );
@@ -205,12 +205,12 @@ function AtlasFindingsCard() {
   return (
     <div className="atlas-panel findings-panel">
       <div className="findings-panel-head">
-        <div className="meta-label">AI findings</div>
+        <div className="meta-label">Anatomy context summary</div>
         <span className="badge pill-research">Static demo</span>
       </div>
       <p className="findings-lead">
-        Structured evidence derived from exported segmentation layers — not a live
-        inference endpoint.
+        Layer-derived evidence from exported segmentation stacks — not live diagnosis or
+        inference.
       </p>
       <ul className="findings-evidence-list">
         {findings.map((f) => (

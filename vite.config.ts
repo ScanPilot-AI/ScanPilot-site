@@ -7,6 +7,7 @@ import { scanpilotDevStaticPlugin } from "./scripts/vite-dev-static-plugin";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const siteRoot = __dirname;
 const productHtml = path.resolve(siteRoot, "product/index.html");
+const demoHtml = path.resolve(siteRoot, "demo/index.html");
 
 export default defineConfig(({ command }) => ({
   plugins: [react(), scanpilotDevStaticPlugin(siteRoot)],
@@ -28,6 +29,7 @@ export default defineConfig(({ command }) => ({
     rollupOptions: {
       input: {
         product: productHtml,
+        demo: demoHtml,
       },
     },
   },

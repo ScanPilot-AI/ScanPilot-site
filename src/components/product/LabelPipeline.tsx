@@ -1,129 +1,145 @@
 import { useDemoWorkspace } from "../../context/DemoWorkspaceContext";
 import { getDemoCase } from "../../data/scanpilot-demo-data";
+import {
+  ConsoleDisclaimer,
+  ConsoleMetricRow,
+  ConsolePage,
+  ConsolePageHeader,
+  StatusChip,
+} from "./ConsolePage";
+
+const QA_METRICS = [
+  { t: "Accepted", n: 12840, variant: "local" as const },
+  { t: "Needs review", n: 926, variant: "amber" as const },
+  { t: "Conflict", n: 188, variant: "tumor" as const },
+  { t: "Verified", n: 4102, variant: "default" as const },
+];
+
+const PIPELINE_STEPS = [
+  {
+    title: "Raw clinical artifacts",
+    items: [
+      "CT scan metadata (spacing / orientation / de-identified)",
+      "Radiology report text (cohort contract)",
+      "Pathology / outcome status (research definitions)",
+      "Outcome index timing (prediagnostic window labels)",
+    ],
+  },
+  {
+    title: "Weak-label extraction",
+    items: [
+      "Pancreas abnormality descriptors (weak)",
+      "Duct dilation / prominence language",
+      "Lesion suspicion phrasing (report-grounded)",
+      "Risk window estimate (training artifact)",
+      "Organ visibility flags",
+    ],
+  },
+  {
+    title: "QA / human review",
+    items: [
+      "Reviewer queue routing",
+      "Conflict adjudication",
+      "Training-ready label promotion",
+    ],
+  },
+];
 
 export function LabelPipeline() {
   const { selectedCaseId } = useDemoWorkspace();
   const c = getDemoCase(selectedCaseId);
 
-  const column1 = [
-    "CT scan metadata (spacing/orientation/de-identified)",
-    "Radiology report text (when available under cohort contract)",
-    "Pathology / outcome status (research definitions)",
-    "Outcome index timing (prediagnostic window labels)",
-  ];
-
-  const column2 = [
-    "Pancreas abnormality descriptors (weak)",
-    "Duct dilation / prominence language",
-    "Lesion suspicion phrasing (report-grounded)",
-    "Risk window estimate (weak label · training artifact)",
-    "Organ visibility flags",
-  ];
-
-  const qaMetrics = [
-    { t: "Accepted", n: 12840 },
-    { t: "Needs review", n: 926 },
-    { t: "Conflict", n: 188 },
-    { t: "Verified", n: 4102 },
-  ];
-
   return (
-    <div className="stack">
-      <div className="panel card-elevated">
-        <h2 className="section-title">Label pipeline · report-grounded weak labels</h2>
-        <p className="muted" style={{ marginTop: 0 }}>
-          Dataset-construction stages — outputs are training and validation
-          artifacts with QA workflow states, not patient-facing conclusions.
-        </p>
-      </div>
+    <ConsolePage>
+      <ConsolePageHeader
+        kicker="Dataset construction"
+        title="Label pipeline · report-grounded research labels"
+        subtitle="Training and validation artifacts with QA workflow states — not patient-facing conclusions."
+        chips={
+          <>
+            <StatusChip variant="demo">Report-grounded</StatusChip>
+            <StatusChip>Weak labels</StatusChip>
+            <StatusChip variant="amber">QA required</StatusChip>
+          </>
+        }
+      />
 
-      <div className="pipeline-metric-row">
-        {qaMetrics.map((r) => (
-          <div key={r.t} className="metric-chip">
-            <b>{r.n.toLocaleString()}</b>
-            <span>{r.t}</span>
+      <ConsoleMetricRow
+        metrics={QA_METRICS.map((r) => ({
+          value: r.n.toLocaleString(),
+          label: r.t,
+          variant: r.variant,
+        }))}
+      />
+
+      <div className="pipeline-flow">
+        {PIPELINE_STEPS.map((step, i) => (
+          <div key={step.title} className="pipeline-flow-step">
+            <div className="pipeline-flow-num">{i + 1}</div>
+            <div className="console-card pipeline-flow-card">
+              <h3 className="console-card-title">{step.title}</h3>
+              <ul className="console-file-list">
+                {step.items.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            </div>
+            {i < PIPELINE_STEPS.length - 1 && (
+              <span className="pipeline-flow-arrow" aria-hidden="true">
+                →
+              </span>
+            )}
           </div>
         ))}
-      </div>
-
-      <div className="pipeline-board">
-        <div className="pipeline-col">
-          <div className="pipeline-col-header">1 · Raw clinical artifacts</div>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13 }}>
-            {column1.map((x) => (
-              <li key={x}>{x}</li>
-            ))}
-          </ul>
-        </div>
-        <div className="pipeline-col">
-          <div className="pipeline-col-header">2 · Weak-label extraction</div>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13 }}>
-            {column2.map((x) => (
-              <li key={x}>{x}</li>
-            ))}
-          </ul>
-        </div>
-        <div className="pipeline-col">
-          <div className="pipeline-col-header">3 · QA / human review</div>
-          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {qaMetrics.map((r) => (
-              <li
-                key={r.t}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: 8,
-                  fontSize: 13,
-                }}
-              >
-                <span>{r.t}</span>
-                <b>{r.n.toLocaleString()}</b>
-              </li>
-            ))}
-          </ul>
+        <div className="pipeline-flow-step">
+          <div className="pipeline-flow-num">4</div>
+          <div className="console-card pipeline-flow-card">
+            <h3 className="console-card-title">Training-ready labels</h3>
+            <p className="muted" style={{ fontSize: 12, margin: 0 }}>
+              Promoted artifacts with provenance, confidence, and QA state for model development.
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="panel card-elevated">
-        <div className="meta-label">Selected case · editorial excerpt</div>
-        <h3 className="section-title" style={{ marginTop: 8 }}>
-          {c.case_id}
-        </h3>
-        <p style={{ fontSize: 15, lineHeight: 1.55, color: "var(--text)" }}>
-          {c.report_excerpt}
-        </p>
-        <div className="meta-label" style={{ marginTop: 16 }}>
-          Extracted weak labels (illustrative training artifacts)
+      <div className="console-card">
+        <div className="mono-label">Selected case · editorial excerpt</div>
+        <h3 className="console-card-title">{c.case_id}</h3>
+        <p style={{ fontSize: 14, lineHeight: 1.55 }}>{c.report_excerpt}</p>
+
+        <div className="console-kv-grid" style={{ marginTop: 14 }}>
+          <div>
+            <span className="mono-label">Source</span>
+            <p style={{ margin: "4px 0 0", fontSize: 13 }}>Report</p>
+          </div>
+          <div>
+            <span className="mono-label">QA state</span>
+            <p style={{ margin: "4px 0 0", fontSize: 13 }}>Needs review (demo)</p>
+          </div>
+          <div>
+            <span className="mono-label">Training artifact</span>
+            <p style={{ margin: "4px 0 0", fontSize: 13 }}>Weak label bundle v3.1</p>
+          </div>
+        </div>
+
+        <div className="mono-label" style={{ marginTop: 16 }}>
+          Extracted weak labels
         </div>
         <div className="stack" style={{ marginTop: 10 }}>
           {c.weak_labels.map((w) => (
-            <div
-              key={w.label + w.value}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 12,
-                fontSize: 13,
-                borderBottom: "1px solid var(--border)",
-                paddingBottom: 8,
-              }}
-            >
+            <div key={w.label + w.value} className="weak-label-row">
               <span>
                 <b>{w.label}:</b> {w.value}
               </span>
               <span className="muted">
-                {w.confidence != null ? `conf ${w.confidence.toFixed(2)}` : ""}{" "}
-                · {w.source}
+                {w.confidence != null ? `conf ${w.confidence.toFixed(2)}` : ""} · {w.source}
               </span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="disclaimer-bar">
-        Demo output for research and infrastructure evaluation only. Not
-        intended for clinical diagnosis or treatment decisions.
-      </div>
-    </div>
+      <ConsoleDisclaimer />
+    </ConsolePage>
   );
 }

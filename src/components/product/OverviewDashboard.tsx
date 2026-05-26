@@ -1,186 +1,148 @@
 import { useDemoWorkspace, type DemoSection } from "../../context/DemoWorkspaceContext";
 import { hasScanPilotApi } from "../../lib/scanpilot-api";
+import {
+  ConsoleDisclaimer,
+  ConsoleMetricRow,
+  ConsolePage,
+  ConsolePageHeader,
+  StatusChip,
+} from "./ConsolePage";
 
 export function OverviewDashboard() {
-  const { setActiveSection } = useDemoWorkspace();
+  const { setActiveSection, summary } = useDemoWorkspace();
   const apiLive = hasScanPilotApi();
 
-  const runSteps: Array<{
-    icon: string;
-    title: string;
-    meta: string;
-    action: DemoSection | null;
-  }> = [
-    {
-      icon: "①",
-      title: "Ingest de-identified CT case references",
-      meta: "Ready · demo routing",
-      action: null,
-    },
-    {
-      icon: "②",
-      title: "Normalize cohort metadata",
-      meta: "Complete",
-      action: null,
-    },
-    {
-      icon: "③",
-      title: "Extract report-grounded weak labels",
-      meta: "12,840 accepted · demo statistic",
-      action: "labels",
-    },
-    {
-      icon: "④",
-      title: "Route uncertain cases to QA",
-      meta: "188 conflicts · demo queue depth",
-      action: "labels",
-    },
-    {
-      icon: "⑤",
-      title: "Generate validation package",
-      meta: "Exportable (workflow)",
-      action: "export",
-    },
-    {
-      icon: "⑥",
-      title: "Expose model inference contract",
-      meta: apiLive ? "Live endpoint configured" : "Demo fallback active",
-      action: "api",
-    },
+  const go = (section: DemoSection) => () => setActiveSection(section);
+
+  const runbook: Array<{ label: string; action: DemoSection }> = [
+    { label: "View cohort", action: "cohort" },
+    { label: "Review labels", action: "labels" },
+    { label: "Open QA", action: "labels" },
+    { label: "Export package", action: "export" },
+    { label: "Test API", action: "api" },
+  ];
+
+  const readiness = [
+    { label: "Dataset readiness", pct: 86, section: "dataset" as DemoSection },
+    { label: "Label readiness", pct: 78, section: "labels" as DemoSection },
+    { label: "Validation readiness", pct: 82, section: "validation" as DemoSection },
+    { label: "Export readiness", pct: 74, section: "export" as DemoSection },
   ];
 
   return (
-    <div className="stack">
+    <ConsolePage>
+      <ConsolePageHeader
+        kicker="Command center"
+        title="Overview"
+        subtitle="Operational surface for cohort construction, report-grounded labels, validation evidence, and export packaging across the PanTS metadata catalog and bundled local atlas exemplars."
+        chips={
+          <>
+            <StatusChip variant="teal">Cohort sync complete</StatusChip>
+            <StatusChip>12,840 labels accepted</StatusChip>
+            <StatusChip variant="amber">188 QA conflicts</StatusChip>
+            <StatusChip variant={apiLive ? "teal" : "demo"}>
+              {apiLive ? "Model endpoint live" : "Demo fallback"}
+            </StatusChip>
+            <StatusChip variant="teal">Export package ready</StatusChip>
+          </>
+        }
+      />
+
       <div className="run-status-strip">
         <div className="run-status-item">
-          <div className="meta-label">Cohort sync</div>
+          <div className="mono-label">Cohort sync</div>
           <div className="run-status-value">Complete</div>
         </div>
         <div className="run-status-item">
-          <div className="meta-label">Label extraction</div>
+          <div className="mono-label">Label extraction</div>
           <div className="run-status-value">12,840 accepted</div>
         </div>
         <div className="run-status-item">
-          <div className="meta-label">QA conflicts</div>
+          <div className="mono-label">QA conflicts</div>
           <div className="run-status-value">188</div>
         </div>
         <div className="run-status-item">
-          <div className="meta-label">Model endpoint</div>
-          <div className="run-status-value">
-            {apiLive ? "Live API" : "Demo fallback"}
-          </div>
+          <div className="mono-label">Model endpoint</div>
+          <div className="run-status-value">{apiLive ? "Live API" : "Demo fallback"}</div>
         </div>
         <div className="run-status-item">
-          <div className="meta-label">Export package</div>
+          <div className="mono-label">Export package</div>
           <div className="run-status-value">Ready</div>
         </div>
       </div>
 
-      <div className="panel card-elevated">
-        <h2 className="section-title">Active project</h2>
-        <p className="muted" style={{ marginTop: 0 }}>
-          Pancreatic Cancer Early Detection · Command surface for cohort
-          operations, weak labels, model API integration, and validation
-          exports.
-        </p>
-        <div className="grid-2">
-          <div>
-            <div className="meta-label">Dataset readiness</div>
-            <div className="progress-track" style={{ marginTop: 8 }}>
-              <i className="progress-fill" style={{ width: "86%" }} />
-            </div>
-          </div>
-          <div>
-            <div className="meta-label">Regulatory workflow readiness</div>
-            <div className="progress-track" style={{ marginTop: 8 }}>
-              <i className="progress-fill" style={{ width: "82%" }} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="panel card-elevated">
-        <h2 className="section-title">Infrastructure runbook</h2>
-        <p className="muted" style={{ marginTop: 0 }}>
-          Operational sequence — illustrates how ScanPilot packages training /
-          validation work (research/demo simulation).
-        </p>
-        <div className="runbook-list" style={{ marginTop: 12 }}>
-          {runSteps.map((s) => (
-            <div key={s.title} className="runbook-step">
-              <div className="runbook-step-icon">{s.icon}</div>
-              <div className="runbook-step-body">
-                <div className="runbook-step-title">{s.title}</div>
-                <div className="runbook-step-meta">{s.meta}</div>
-              </div>
-              {s.action ? (
-                <div className="runbook-step-action">
+      <div className="console-grid-2">
+        <div className="console-card">
+          <h3 className="console-card-title">Active project</h3>
+          <p className="muted" style={{ marginTop: 0, fontSize: 13 }}>
+            Pancreatic cancer early detection infrastructure — 9,901 metadata catalog cases
+            with 5 bundled local full-volume segmentation exemplars in this static demo.
+          </p>
+          <div className="readiness-grid">
+            {readiness.map((r) => (
+              <div key={r.label} className="readiness-row">
+                <div className="readiness-row-head">
+                  <span className="mono-label">{r.label}</span>
                   <button
                     type="button"
-                    className="btn ghost secondary-button"
-                    onClick={() => s.action && setActiveSection(s.action)}
+                    className="clinical-button-secondary"
+                    onClick={go(r.section)}
                   >
                     Open
                   </button>
                 </div>
-              ) : (
-                <span />
-              )}
-            </div>
-          ))}
+                <div className="progress-track">
+                  <i className="progress-fill" style={{ width: `${r.pct}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="console-card">
+          <h3 className="console-card-title">Infrastructure runbook</h3>
+          <p className="muted" style={{ marginTop: 0, fontSize: 12 }}>
+            Research/demo workflow — illustrates how ScanPilot packages training and validation
+            work without implying live clinical deployment.
+          </p>
+          <ul className="runbook-actions">
+            {runbook.map((step) => (
+              <li key={step.label}>
+                <button
+                  type="button"
+                  className="clinical-button-secondary"
+                  onClick={go(step.action)}
+                >
+                  {step.label}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
-      <div className="grid-2">
-        <div className="panel">
-          <h2 className="section-title">Cohort size</h2>
-          <p style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>7,158</p>
-          <p className="muted" style={{ margin: "4px 0 0" }}>
-            patients · 6 centers (research validation context)
-          </p>
-        </div>
-        <div className="panel">
-          <h2 className="section-title">Prediagnostic cases</h2>
-          <p style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>159</p>
-          <p className="muted" style={{ margin: "4px 0 0" }}>
-            median 347 days lead index (publication cohort statistic)
-          </p>
-        </div>
-        <div className="panel">
-          <h2 className="section-title">Label coverage</h2>
-          <p className="muted" style={{ margin: 0 }}>
-            Reports + weak labels + organ masks · PNG stacks under{" "}
-            <code>assets/demo-cases</code>
-          </p>
-        </div>
-        <div className="panel">
-          <h2 className="section-title">Model endpoint</h2>
-          <p className="muted" style={{ margin: 0 }}>
-            Remote inference contract —{" "}
-            <button
-              type="button"
-              className="btn ghost secondary-button"
-              style={{ padding: "4px 10px", fontSize: 12 }}
-              onClick={() => setActiveSection("api")}
-            >
-              Open Model API
-            </button>
-          </p>
-        </div>
-        <div className="panel" style={{ gridColumn: "1 / -1" }}>
-          <h2 className="section-title">
-            Validation · research benchmark (not deployment claim)
-          </h2>
-          <p className="muted" style={{ margin: 0 }}>
-            AUC 0.918–0.945 external range · +50.3pp sensitivity vs readers in
-            reader study (ePAI publication context).
-          </p>
-        </div>
-      </div>
+      <ConsoleMetricRow
+        metrics={[
+          { value: "7,158", label: "Cohort size (external validation context)" },
+          { value: "159", label: "Prediagnostic cases" },
+          { value: "347d", label: "Median lead time" },
+          { value: "6", label: "Centers" },
+          {
+            value: summary?.tumorPositiveCases?.toLocaleString() ?? "—",
+            label: "Tumor-positive catalog",
+            variant: "tumor",
+          },
+          {
+            value: String(summary?.localFullSegmentationCases ?? summary?.localVolumeCases ?? 5),
+            label: "Local atlas exemplars",
+            variant: "local",
+          },
+        ]}
+      />
 
-      <div className="panel card-elevated">
-        <h2 className="section-title">Infrastructure workflow</h2>
-        <div className="timeline" style={{ marginTop: 12 }}>
+      <div className="console-card">
+        <h3 className="console-card-title">Infrastructure workflow</h3>
+        <div className="timeline workflow-timeline-inline">
           <span className="timeline-step">Raw CT + reports</span>
           <span className="timeline-arrow">→</span>
           <span className="timeline-step">Cohort selection</span>
@@ -197,10 +159,7 @@ export function OverviewDashboard() {
         </div>
       </div>
 
-      <div className="disclaimer-bar">
-        Demo output for research and infrastructure evaluation only. Not
-        intended for clinical diagnosis or treatment decisions.
-      </div>
-    </div>
+      <ConsoleDisclaimer />
+    </ConsolePage>
   );
 }

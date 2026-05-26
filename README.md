@@ -56,20 +56,26 @@ oncoshield-site/
     requirements-demo-export.txt
 ```
 
-## PanTS Atlas (product workspace)
+## PanTS Atlas (two-tier database)
 
-The React Infrastructure Console at `/product/` loads **database-driven** assets from `assets/pants-atlas/` (manifest JSON + precomputed PNG stacks). Regenerate from local PanTS volumes (requires `PanTS-Viewer/PanTS/data/` on disk — not committed):
+| Tier | File | Count |
+|------|------|-------|
+| Metadata catalog | `assets/data/pantsCatalog.json` | 9,901 cases from `metadata.xlsx` |
+| Local volumes | `assets/data/pantsLocalAtlas.json` + `assets/pants-atlas/` PNGs | 5 bundled CT cases |
+| Summary | `assets/data/pantsAtlasSummary.json` | Aggregated stats |
+
+Regenerate (requires `PanTS-Viewer/PanTS/data/` on disk — not committed to deploy):
 
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r scripts/requirements-demo-export.txt
 .venv/bin/python scripts/build_pants_atlas_database.py
-.venv/bin/python scripts/export_pants_atlas_png.py
+.venv/bin/python scripts/export_pants_atlas_png.py   # if PNGs missing
 .venv/bin/python scripts/audit_pants_atlas_assets.py
 npm run build
 ```
 
-**Deploy note:** Commit `assets/pants-atlas/` (≈13MB PNGs + JSON). Without it, GitHub Pages shows broken thumbnails. Legacy `assets/demo-cases/` remains as fallback only.
+**Deploy:** Commit `assets/data/pants*.json` and `assets/pants-atlas/` (~13MB PNGs). Metadata-only catalog cases open a detail drawer; only local-volume cases load CT in the viewer.
 
 ## Regenerating legacy demo slices
 

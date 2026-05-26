@@ -10,9 +10,9 @@ import {
   isCtAnalysisMockMode,
 } from "../../lib/scanpilot-api";
 import { CaseViewer } from "./CaseViewer";
-import { LayerIntelligence } from "./LayerIntelligence";
 import { ReviewQueue } from "./ReviewQueue";
 import { AIFindingsCard } from "./AIFindingsCard";
+import { CatalogMetadataDrawer } from "./CatalogMetadataDrawer";
 
 const DatasetConsole = lazy(() =>
   import("./DatasetConsole").then((m) => ({ default: m.DatasetConsole }))
@@ -43,16 +43,16 @@ const OverviewDashboard = lazy(() =>
 );
 
 const NAV: { id: DemoSection; label: string }[] = [
+  { id: "overview", label: "Overview" },
   { id: "atlas", label: "Atlas workspace" },
   { id: "dataset", label: "Atlas database" },
+  { id: "cohort", label: "Cohort builder" },
+  { id: "labels", label: "Label pipeline" },
   { id: "sandbox", label: "CT analysis" },
   { id: "validation", label: "Validation" },
   { id: "export", label: "Export package" },
-  { id: "compliance", label: "Compliance" },
-  { id: "cohort", label: "Cohort builder" },
-  { id: "labels", label: "Label pipeline" },
+  { id: "compliance", label: "Readiness" },
   { id: "api", label: "Model API" },
-  { id: "overview", label: "Overview" },
 ];
 
 function SectionFallback() {
@@ -64,7 +64,7 @@ function SectionFallback() {
 }
 
 function AtlasWorkspace() {
-  const { globalManifest, atlasLoading, disclaimer } = useDemoWorkspace();
+  const { summary, atlasLoading, disclaimer } = useDemoWorkspace();
 
   return (
     <div className="atlas-workspace">
@@ -72,18 +72,22 @@ function AtlasWorkspace() {
         <div>
           <h1 className="atlas-title">ScanPilot Atlas</h1>
           <p className="atlas-subtitle">
-            Pancreas-centered abdominal CT review · multi-organ context · pre-diagnostic
-            triage
+            5 bundled local CT volumes with exported segmentation overlays · 9,901-case
+            metadata catalog for cohort context · research-use static demo
           </p>
         </div>
         <div className="atlas-header-stats">
-          {!atlasLoading && globalManifest && (
+          {!atlasLoading && summary && (
             <>
               <span className="atlas-stat">
-                <b>{globalManifest.caseCount}</b> cases
+                <b>{summary.totalCatalogCases.toLocaleString()}</b> catalog
               </span>
               <span className="atlas-stat">
-                <b>{globalManifest.uniqueOrganLayers.length}</b> organ layers
+                <b>{summary.localVolumeCases}</b> local volumes
+              </span>
+              <span className="atlas-stat">
+                <b>{summary.exportedOrganLayerCount ?? summary.uniqueOrganLayers.length}</b>
+                {" exported layers"}
               </span>
             </>
           )}
@@ -106,11 +110,11 @@ function AtlasWorkspace() {
       </div>
 
       <div className="atlas-bottom">
-        <LayerIntelligence />
         <WorkflowTimeline />
       </div>
 
       <p className="atlas-footer-disclaimer">{disclaimer}</p>
+      <CatalogMetadataDrawer />
     </div>
   );
 }
@@ -119,7 +123,7 @@ function WorkflowTimeline() {
   const steps = [
     { label: "Case ingest", state: "complete" },
     { label: "Layer QA", state: "complete" },
-    { label: "AI triage", state: "active" },
+    { label: "Evidence review", state: "active" },
     { label: "Radiologist review", state: "pending" },
     { label: "Export readiness", state: "pending" },
   ];
@@ -179,7 +183,7 @@ function WorkspaceBody() {
           <span className="ws-brand-mark" aria-hidden="true" />
           <div>
             <div className="ws-brand-title">ScanPilot</div>
-            <div className="ws-brand-sub">Atlas · Clinical AI</div>
+            <div className="ws-brand-sub">Atlas · Research infrastructure</div>
           </div>
         </div>
         <div className="ws-workspace-label">Workspace</div>
@@ -199,8 +203,8 @@ function WorkspaceBody() {
         <a className="ws-nav-btn" href="../index.html">
           Back to landing
         </a>
-        <a className="ws-nav-btn" href="../demo/#viewer">
-          Sample CT Viewer
+        <a className="ws-nav-btn" href="../demo/#console">
+          Explore sample viewer
         </a>
       </aside>
 

@@ -10,7 +10,7 @@ const ScanPilotDemo = lazy(() =>
 function ConsoleLoader() {
   return (
     <main className="product-page-shell product-boot-shell">
-      <p className="meta-label">Infrastructure console</p>
+      <p className="meta-label">ScanPilot console</p>
       <h1>Loading console…</h1>
       <p className="muted">Preparing CT analysis sandbox and workflow modules.</p>
     </main>

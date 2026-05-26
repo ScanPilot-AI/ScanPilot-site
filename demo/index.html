@@ -1,262 +1,28 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ScanPilot Sample CT Viewer</title>
-  <meta name="description" content="Explore de-identified PanTS sample cases with anatomy overlays. Research demo only. Not FDA cleared." />
-  <link rel="stylesheet" href="../assets/css/style.css" />
-  <link rel="stylesheet" href="../assets/css/demo-page.css" />
-</head>
-<body class="demo-page">
-  <nav class="nav demo-nav">
-    <div class="navin">
-      <a class="brand" href="../index.html#top">
-        <span class="brand-main"><span class="brand-mark"></span><span>ScanPilot</span></span>
-        <span class="brand-sub">Powered by ePAI</span>
-      </a>
-      <div class="links">
-        <a href="../index.html#top">Home</a>
-        <a href="../index.html#platform">Platform</a>
-        <a href="../index.html#research-affiliations">Affiliations</a>
-        <a href="../index.html#evidence">Evidence</a>
-        <a href="../index.html#product">Product</a>
-        <a href="../index.html#commercial">Commercial</a>
-        <a href="../index.html#investors">Investors</a>
-        <a class="demo-nav-active" href="#console">Sample CT Viewer</a>
-        <a href="../index.html#contact">Contact</a>
-        <a class="nav-cta" href="../product/">Open Infrastructure Console</a>
-      </div>
-    </div>
-  </nav>
-
-  <main class="wrap demo-main">
-    <div class="demo-infra-banner" role="region" aria-label="Infrastructure console pointer">
-      <p>Looking for live CT upload and JHU/ePAI analysis? Open the Infrastructure Console.</p>
-      <a class="btn primary" href="../product/">Open Infrastructure Console</a>
-    </div>
-
-    <section class="demo-console-wrap reveal visible" id="console">
-      <header class="demo-command-bar">
-        <div class="demo-command-bar-text">
-          <p class="demo-command-eyebrow">Sample CT Viewer</p>
-          <h1 class="demo-command-title">Explore de-identified PanTS sample cases</h1>
-          <p class="demo-command-sub">Static CT slices with pancreas, duct, and lesion overlays. Not the live upload pipeline.</p>
-        </div>
-        <div class="demo-command-chips" aria-label="Demo context">
-          <span class="demo-chip">Public sample case</span>
-          <span class="demo-chip">De-identified PanTS volume</span>
-          <span class="demo-chip">Research demo only</span>
-          <span class="demo-chip demo-chip-warn">Not for diagnosis</span>
-        </div>
-      </header>
-
-      <div class="demo-console-card" id="viewer">
-        <div class="demo-console-grid">
-          <div class="demo-workbench">
-            <p id="demoManifestError" class="demo-manifest-error" hidden role="alert"></p>
-            <div class="demo-viewer-toolbar" aria-label="Viewer controls">
-              <div class="demo-toolbar-group">
-                <button type="button" class="demo-icon-btn" id="btnSlicePrev" aria-label="Previous slice">◀</button>
-                <button type="button" class="demo-icon-btn demo-icon-btn-accent" id="btnCine" aria-pressed="false" aria-label="Play or pause cine">▶</button>
-                <button type="button" class="demo-icon-btn" id="btnSliceNext" aria-label="Next slice">▶</button>
-              </div>
-              <div class="demo-toolbar-group demo-toolbar-grow">
-                <span class="demo-slice-indicator" id="sliceIndicator">Slice 1 / 9</span>
-              </div>
-              <div class="demo-toolbar-group">
-                <button type="button" class="demo-icon-btn" id="btnZoomOut" aria-label="Zoom out">−</button>
-                <button type="button" class="demo-icon-btn" id="btnZoomReset" aria-label="Reset zoom">⊙</button>
-                <button type="button" class="demo-icon-btn" id="btnZoomIn" aria-label="Zoom in">+</button>
-              </div>
-            </div>
-
-            <div class="demo-viewer-stage" id="viewerStage" aria-label="Axial CT with segmentation overlays">
-              <div class="demo-viewer-image-stack" id="viewerImageStack" data-window="abdomen">
-                <p id="viewerCtError" class="demo-viewer-ct-error" hidden role="alert"></p>
-                <img class="demo-ct-base" id="ctImage" alt="" width="512" height="512" decoding="async" />
-                <img class="demo-overlay-layer" id="olNearby" alt="" role="presentation" width="512" height="512" decoding="async" data-layer-key="nearby" />
-                <img class="demo-overlay-layer" id="olPancreas" alt="" role="presentation" width="512" height="512" decoding="async" data-layer-key="pancreas" />
-                <img class="demo-overlay-layer" id="olDuct" alt="" role="presentation" width="512" height="512" decoding="async" data-layer-key="duct" />
-                <img class="demo-overlay-layer" id="olLesion" alt="" role="presentation" width="512" height="512" decoding="async" data-layer-key="lesion" />
-              </div>
-              <div class="demo-crosshair-v" id="crossV"></div>
-              <div class="demo-crosshair-h" id="crossH"></div>
-            </div>
-
-            <div class="demo-slice-block">
-              <div class="demo-slice-row">
-                <label for="sliceSlider"><span>Axial slice</span><span id="sliceLabel">1 / 9</span></label>
-                <input type="range" id="sliceSlider" min="0" max="8" value="0" aria-valuetext="Slice 1 of 9" />
-              </div>
-            </div>
-
-            <div class="demo-window-row" role="group" aria-label="Viewer style presets (CSS filters on static PNGs)">
-              <span class="demo-mini-label">Window style</span>
-              <div class="demo-window-presets">
-                <button type="button" class="demo-preset-btn is-active" data-window="abdomen">Abdomen</button>
-                <button type="button" class="demo-preset-btn" data-window="soft">Soft tissue</button>
-                <button type="button" class="demo-preset-btn" data-window="pancreas">Pancreas</button>
-                <button type="button" class="demo-preset-btn" data-window="high">High contrast</button>
-              </div>
-              <p class="demo-window-note">Presets apply CSS filters to the static slice export (not true HU windowing).</p>
-            </div>
-
-            <div class="demo-opacity-row">
-              <label for="overlayOpacity">Overlay opacity <span id="overlayOpacityValue">65%</span></label>
-              <input type="range" id="overlayOpacity" min="0.15" max="1" step="0.05" value="0.65" />
-            </div>
-
-            <div class="demo-case-row">
-              <label for="caseSelect">Case</label>
-              <select class="demo-select" id="caseSelect" aria-label="Select sample case"></select>
-            </div>
-
-            <div class="demo-layer-section">
-              <span class="demo-mini-label">Layers</span>
-              <div class="demo-layer-pills" id="layerPills" role="group" aria-label="Segmentation overlay toggles"></div>
-              <p class="demo-layer-hint">Keyboard: 1–4 toggle layers · ← → slices · Space cine · R run review</p>
-            </div>
-          </div>
-
-          <aside class="demo-ai-panel" aria-labelledby="aiPanelHeading">
-            <div class="demo-ai-panel-head">
-              <h2 id="aiPanelHeading">AI findings</h2>
-              <button type="button" class="demo-run-btn" id="btnRunReview">Run ScanPilot review</button>
-            </div>
-
-            <div class="demo-meta-block">
-              <h3 class="demo-subheading">Case metadata</h3>
-              <dl class="demo-dl demo-dl-tight" id="caseMetaDl"></dl>
-            </div>
-
-            <div class="demo-stepper-block">
-              <h3 class="demo-subheading">ScanPilot agent steps</h3>
-              <ol class="demo-stepper" id="agentStepper" aria-live="polite"></ol>
-            </div>
-
-            <div class="demo-score-block">
-              <div class="demo-score-head">
-                <span class="demo-subheading-inline">PDAC suspicion score</span>
-                <span class="demo-badge-demo">Illustrative · demo</span>
-              </div>
-              <div class="demo-score-value" id="fScore">—<span class="unit">· demo</span></div>
-              <p class="demo-score-band" id="fScoreBand"></p>
-              <p class="demo-score-foot">Numeric value is a product-demo illustration only, not a calibrated clinical model output.</p>
-            </div>
-
-            <div>
-              <h3 class="demo-subheading">Findings</h3>
-              <ul class="demo-findings-list" id="fFindings"></ul>
-            </div>
-
-            <div>
-              <h3 class="demo-subheading">Recommended workflow</h3>
-              <ul class="demo-workflow-list" id="fWorkflow"></ul>
-            </div>
-
-            <p class="demo-safety-inline" id="fSafety"></p>
-          </aside>
-        </div>
-
-        <div class="demo-intelligence-grid">
-          <article class="demo-intel-card">
-            <h3>Anatomy parsed</h3>
-            <p class="demo-intel-lead" id="anatomyParsedLead"></p>
-            <ul class="demo-intel-list" id="anatomyGroupList"></ul>
-          </article>
-          <article class="demo-intel-card">
-            <h3>Retrospective validation output</h3>
-            <p class="demo-intel-tag">Workflow simulation</p>
-            <dl class="demo-intel-dl" id="retroValidationDl"></dl>
-          </article>
-          <article class="demo-intel-card">
-            <h3>Radiologist queue</h3>
-            <p class="demo-intel-tag">Second-read simulation</p>
-            <div class="demo-queue-card" id="queueCard">
-              <p class="demo-queue-placeholder">Run the agent to enqueue this sample case.</p>
-            </div>
-          </article>
-          <article class="demo-intel-card demo-intel-card-api">
-            <h3>API sandbox</h3>
-            <p class="demo-api-method"><code>POST</code> <span>/v1/ct-pdac/analyze</span></p>
-            <pre class="demo-api-json" id="apiJson" aria-label="Example API response body"></pre>
-          </article>
-        </div>
-
-        <div class="demo-3d-panel" id="panel3d">
-          <button type="button" class="demo-3d-toggle" id="btn3dToggle" aria-expanded="false">
-            <span>3D anatomy preview</span>
-            <span class="demo-3d-chevron">▼</span>
-          </button>
-          <div class="demo-3d-body" id="panel3dBody" hidden>
-            <p class="demo-3d-note">Optional GLB preview (pancreas). Loads <code>&lt;model-viewer&gt;</code> from Google’s CDN on first open. Core demo does not depend on WebGL.</p>
-            <div class="demo-model-host" id="modelHost"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="demo-workflow-section" id="workflow">
-      <div class="demo-strip-title reveal">
-        <h2>From ingest to radiologist review</h2>
-        <p class="tight">Structured assistive workflow — not autonomous interpretation.</p>
-      </div>
-      <div class="demo-workflow-grid reveal">
-        <article class="demo-workflow-card">
-          <span class="demo-workflow-step">01</span>
-          <h3>Ingest CT</h3>
-          <p>Routine abdominal CT enters the review layer with standard metadata.</p>
-        </article>
-        <article class="demo-workflow-card">
-          <span class="demo-workflow-step">02</span>
-          <h3>Parse anatomy</h3>
-          <p>Organ context is established so outputs stay anatomy-aware.</p>
-        </article>
-        <article class="demo-workflow-card">
-          <span class="demo-workflow-step">03</span>
-          <h3>Localize candidate region</h3>
-          <p>Candidate areas are surfaced spatially for human verification.</p>
-        </article>
-        <article class="demo-workflow-card">
-          <span class="demo-workflow-step">04</span>
-          <h3>PDAC suspicion score</h3>
-          <p>Illustrative stratification supports triage; follow-up is per protocol.</p>
-        </article>
-        <article class="demo-workflow-card">
-          <span class="demo-workflow-step">05</span>
-          <h3>Radiologist second-read</h3>
-          <p>Cases route into second-read workflows with audit-friendly outputs.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="demo-prose-section">
-      <div class="demo-prose-grid">
-        <article class="demo-prose-card reveal">
-          <div class="eyebrow">From demo to paid validation</div>
-          <h2>Run ScanPilot on historical CT archives</h2>
-          <p class="tight">Before any live deployment, sites can run ScanPilot on historical archives to quantify candidate flags, review burden, and lead time — under appropriate governance.</p>
-        </article>
-        <article class="demo-prose-card reveal">
-          <div class="eyebrow">Technical approach</div>
-          <h2>Anatomy-aware, radiologist-in-the-loop</h2>
-          <p class="tight">This page uses static PNG exports from de-identified PanTS-style samples for fast loading. For live CT upload and JHU/ePAI analysis, open the Infrastructure Console.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" style="padding-bottom: 64px">
-      <p class="compliance" style="max-width: 72ch; margin: 0 auto">Research and product demonstration only. Not for diagnosis, treatment, or patient-care decisions. Not FDA cleared.</p>
-      <p style="text-align: center; margin-top: 18px"><a class="btn" href="../index.html">Back to ScanPilot home</a></p>
-    </section>
-  </main>
-
-  <footer class="wrap footer">
-    <span>ScanPilot · Powered by ePAI</span>
-    <span><a href="mailto:szhu71@jh.edu">szhu71@jh.edu</a></span>
-  </footer>
-
-  <script src="../assets/js/demo-page.js"></script>
-</body>
+<html lang="en" class="sv-page">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ScanPilot · PanTS Atlas Sample Viewer</title>
+    <meta
+      name="description"
+      content="Cinematic CT atlas sample viewer — 5 bundled local volumes with segmentation overlays. Research-use static demo."
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #030508;
+        color: #f8fafc;
+      }
+      #root {
+        min-height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/demo-main.tsx"></script>
+  </body>
 </html>

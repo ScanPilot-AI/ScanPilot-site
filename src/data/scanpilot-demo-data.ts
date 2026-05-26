@@ -73,10 +73,17 @@ export type ValidationMetrics = {
   model_id: string;
   auc_range: [number, number];
   sensitivity_delta_pp: number;
+  reader_sensitivity: number;
+  reader_specificity: number;
+  research_signal_sensitivity: number;
   patients: number;
   centers: number;
   prediagnostic_cases: number;
   median_lead_days: number;
+  lead_time_buckets: Array<{ label: string; count: number }>;
+  subgroup_strata: Array<{ label: string; patients: number; auc: number }>;
+  qa_notes: string[];
+  validation_artifacts: string[];
   per_center: Array<{
     label: string;
     patients: number;
@@ -90,11 +97,16 @@ export type ValidationMetrics = {
 export type ExportPackage = {
   id: string;
   title: string;
+  purpose: string;
   description: string;
   included_files: string[];
   estimated_size_gb: number;
   license: string;
   access: string;
+  access_mode: string;
+  version: string;
+  checksum_status: "verified" | "pending" | "demo";
+  readiness: "ready" | "gated" | "planned";
   status: "Available" | "Gated" | "Planned";
 };
 
@@ -477,10 +489,40 @@ export const DEMO_VALIDATION: ValidationMetrics = {
   model_id: "epai-research-baseline",
   auc_range: [0.918, 0.945],
   sensitivity_delta_pp: 50.3,
+  reader_sensitivity: 0.251,
+  reader_specificity: 0.954,
+  research_signal_sensitivity: 0.754,
   patients: 7158,
   centers: 6,
   prediagnostic_cases: 159,
   median_lead_days: 347,
+  lead_time_buckets: [
+    { label: "0–90d", count: 12 },
+    { label: "91–180d", count: 28 },
+    { label: "181–270d", count: 41 },
+    { label: "271–365d", count: 38 },
+    { label: "366d+", count: 40 },
+  ],
+  subgroup_strata: [
+    { label: "Age 45–59", patients: 2104, auc: 0.926 },
+    { label: "Age 60–74", patients: 3820, auc: 0.931 },
+    { label: "Age 75+", patients: 1234, auc: 0.919 },
+    { label: "Portal venous", patients: 5012, auc: 0.928 },
+  ],
+  qa_notes: [
+    "Reader-study metrics are publication-context summaries — not deployed product claims.",
+    "External validation spans 6 international centers with prespecified prediagnostic case mix.",
+    "Subgroup tables are illustrative diligence artifacts in this static demo.",
+  ],
+  validation_artifacts: [
+    "validation_report.pdf",
+    "cohort_manifest.json",
+    "roc_summary.csv",
+    "reader_study_summary.json",
+    "subgroup_stratification.csv",
+    "model_card.json",
+    "audit_log.csv",
+  ],
   per_center: [
     {
       label: "Center A",
@@ -519,7 +561,8 @@ export const EXPORT_PACKAGES_DEMO: ExportPackage[] = [
   {
     id: "train",
     title: "Training dataset package",
-    description: "Curated tensors + manifests for model development (demo listing).",
+    purpose: "Model development tensors, manifests, and split protocols.",
+    description: "Curated training tensors + manifests for infrastructure pilots.",
     included_files: [
       "cohort_manifest.json",
       "label_schema.json",
@@ -528,22 +571,32 @@ export const EXPORT_PACKAGES_DEMO: ExportPackage[] = [
     estimated_size_gb: 480,
     license: "Research pilot DUA template",
     access: "Signed URL / private bucket policy",
+    access_mode: "Private object store",
+    version: "v2.4.1-demo",
+    checksum_status: "verified",
+    readiness: "ready",
     status: "Available",
   },
   {
     id: "val",
     title: "Validation dataset package",
-    description: "Held-out evaluation folds + stratification metadata.",
+    purpose: "Held-out evaluation folds with stratification metadata.",
+    description: "External validation index and site stratification tables.",
     included_files: ["validation_index.csv", "site_stratification.json"],
     estimated_size_gb: 120,
     license: "Research pilot DUA template",
     access: "Private link",
+    access_mode: "Gated download",
+    version: "v1.8.0-demo",
+    checksum_status: "verified",
+    readiness: "gated",
     status: "Gated",
   },
   {
-    id: "fda",
-    title: "FDA evidence package",
-    description: "Regulatory workflow support bundle (non-submission demo).",
+    id: "reg",
+    title: "Regulatory evidence package",
+    purpose: "Diligence bundle for sponsor review — not a submission claim.",
+    description: "Regulatory workflow support artifacts for audit readiness.",
     included_files: [
       "validation_report.pdf",
       "audit_log.csv",
@@ -551,28 +604,12 @@ export const EXPORT_PACKAGES_DEMO: ExportPackage[] = [
     ],
     estimated_size_gb: 12,
     license: "Sponsor-specific",
-    access: "Compliance review channel",
+    access: "Readiness review channel",
+    access_mode: "Secure transfer",
+    version: "v1.2.0-demo",
+    checksum_status: "pending",
+    readiness: "gated",
     status: "Gated",
-  },
-  {
-    id: "pilot",
-    title: "Partner pilot package",
-    description: "API integration checklist + sandbox credentials template.",
-    included_files: ["openapi_stub.yaml", "sdk_examples.zip"],
-    estimated_size_gb: 0.2,
-    license: "Pilot MSA",
-    access: "API gateway allowlist",
-    status: "Planned",
-  },
-  {
-    id: "api",
-    title: "API integration package",
-    description: "Reference requests for remote scan operations + cohort routing.",
-    included_files: ["analyze_request_examples.json", "webhooks.md"],
-    estimated_size_gb: 0.01,
-    license: "Partner agreement",
-    access: "Developer portal",
-    status: "Available",
   },
 ];
 

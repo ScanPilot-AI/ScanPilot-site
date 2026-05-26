@@ -1,9 +1,21 @@
 import { useMemo, useState } from "react";
+import { useDemoWorkspace } from "../../context/DemoWorkspaceContext";
 import { buildCohort } from "../../lib/scanpilot-api";
+import {
+  filterCatalogCases,
+  getTumorBadge,
+  type PanTSCatalogCase,
+} from "../../data/pants-atlas";
 import {
   DEFAULT_COHORT_FILTER,
   type CohortFilter,
 } from "../../data/scanpilot-demo-data";
+import {
+  ConsoleDisclaimer,
+  ConsolePage,
+  ConsolePageHeader,
+  StatusChip,
+} from "./ConsolePage";
 
 type CohortPackage = {
   id: string;
@@ -17,6 +29,7 @@ type CohortPackage = {
 };
 
 export function CohortBuilder() {
+  const { catalog } = useDemoWorkspace();
   const [filters, setFilters] = useState<CohortFilter>(DEFAULT_COHORT_FILTER);
   const [busy, setBusy] = useState(false);
   const [packages, setPackages] = useState<CohortPackage[]>([]);
@@ -26,19 +39,32 @@ export function CohortBuilder() {
   const queryDsl = useMemo(
     () =>
       JSON.stringify(
-        {
-          op: "cohort.match",
-          version: 1,
-          filters,
-        },
+        { op: "cohort.match", version: 1, filters },
         null,
         2
       ),
     [filters]
   );
 
-  const summary =
-    "Find abdominal CT scans with pancreas visible, prediagnostic window 0–18 months before diagnosis, radiology report available, cohort configurable for prior-cancer exclusions.";
+  const inclusionChips = [
+    `${filters.organ}-visible ${filters.modality}`,
+    `${filters.contrast_phase} phase`,
+    `Ages ${filters.age_range[0]}–${filters.age_range[1]}`,
+    filters.report_available ? "Report required" : "Report optional",
+  ];
+
+  const exclusionChips = [
+    "Prior cancer (configurable)",
+    "Non-diagnostic QA fail",
+    "Missing prediagnostic window",
+  ];
+
+  const previewCases = useMemo((): PanTSCatalogCase[] => {
+    if (!catalog) return [];
+    return filterCatalogCases(catalog.cases, {
+      sex: filters.sex === "All" ? undefined : filters.sex === "Male" ? "M" : filters.sex === "Female" ? "F" : undefined,
+    }).slice(0, 8);
+  }, [catalog, filters.sex]);
 
   async function onCreate() {
     setBusy(true);
@@ -53,9 +79,7 @@ export function CohortBuilder() {
       training_readiness: 0.81,
     };
     const { data, meta } = await buildCohort(
-      {
-        filters: { ...filters } as unknown as Record<string, unknown>,
-      },
+      { filters: { ...filters } as unknown as Record<string, unknown> },
       mockResult
     );
     const id =
@@ -65,7 +89,7 @@ export function CohortBuilder() {
     setPackages((p) => [
       {
         id,
-        name: filters.cancer_type + " · demo cohort package",
+        name: `${filters.cancer_type} · deterministic demo package`,
         created_at: new Date().toISOString().slice(0, 19),
         patients: Number(data.patients) || mockResult.patients,
         scans: Number(data.scans) || mockResult.scans,
@@ -79,7 +103,7 @@ export function CohortBuilder() {
     setLastMeta(
       meta.mode === "live"
         ? "Live cohort build response"
-        : `Demo fallback${meta.error ? `: ${meta.error}` : ""}`
+        : `Deterministic demo package${meta.error ? `: ${meta.error}` : ""}`
     );
     setBusy(false);
   }
@@ -92,20 +116,22 @@ export function CohortBuilder() {
   const moEnd = filters.prediagnostic_months[1];
 
   return (
-    <div className="stack">
-      <div className="panel card-elevated">
-        <h2 className="section-title">Cohort builder</h2>
-        <p className="muted" style={{ marginTop: 0 }}>
-          Visual query for multi-center oncology cohort construction. Executes
-          against ScanPilot APIs when configured; otherwise returns a
-          deterministic demo package.
-        </p>
-        <p style={{ fontSize: 14, marginBottom: 0 }}>{summary}</p>
-      </div>
+    <ConsolePage>
+      <ConsolePageHeader
+        kicker="Query console"
+        title="Cohort builder"
+        subtitle="Construct multi-center oncology cohorts from metadata filters. Executes against ScanPilot APIs when configured; otherwise returns a deterministic demo package."
+        chips={
+          <>
+            <StatusChip variant="demo">Deterministic demo</StatusChip>
+            <StatusChip>Query DSL v1</StatusChip>
+          </>
+        }
+      />
 
-      <div className="grid-2">
-        <div className="panel card-elevated">
-          <h2 className="section-title">Filters</h2>
+      <div className="console-grid-2">
+        <div className="console-card">
+          <h3 className="console-card-title">Filters</h3>
           <div className="filter-grid">
             <div className="filter-group">
               <div className="filter-group-title">Case definition</div>
@@ -144,21 +170,12 @@ export function CohortBuilder() {
                   <option>MRI</option>
                 </select>
               </label>
-              <label className="muted">
-                Institution / center
-                <input
-                  className="btn"
-                  style={{ width: "100%", marginTop: 4 }}
-                  value={filters.institution}
-                  onChange={(e) => set("institution", e.target.value)}
-                />
-              </label>
             </div>
 
             <div className="filter-group">
               <div className="filter-group-title">Time & demographics</div>
               <label className="muted">
-                Prediagnostic window (months, numeric)
+                Prediagnostic window (months)
                 <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
                   <input
                     type="number"
@@ -183,10 +200,6 @@ export function CohortBuilder() {
                     }
                   />
                 </div>
-                <span className="muted" style={{ fontSize: 11, marginTop: 6 }}>
-                  UI framing: {moStart}–{moEnd} months before diagnosis (research
-                  window).
-                </span>
               </label>
               <label className="muted">
                 Age range
@@ -196,10 +209,7 @@ export function CohortBuilder() {
                     className="btn"
                     value={filters.age_range[0]}
                     onChange={(e) =>
-                      set("age_range", [
-                        Number(e.target.value),
-                        filters.age_range[1],
-                      ])
+                      set("age_range", [Number(e.target.value), filters.age_range[1]])
                     }
                   />
                   <input
@@ -207,10 +217,7 @@ export function CohortBuilder() {
                     className="btn"
                     value={filters.age_range[1]}
                     onChange={(e) =>
-                      set("age_range", [
-                        filters.age_range[0],
-                        Number(e.target.value),
-                      ])
+                      set("age_range", [filters.age_range[0], Number(e.target.value)])
                     }
                   />
                 </div>
@@ -229,82 +236,69 @@ export function CohortBuilder() {
                 </select>
               </label>
             </div>
-
-            <div className="filter-group">
-              <div className="filter-group-title">Acquisition & QA</div>
-              <label className="muted">
-                Contrast phase
-                <select
-                  className="btn"
-                  style={{ width: "100%", marginTop: 4 }}
-                  value={filters.contrast_phase}
-                  onChange={(e) => set("contrast_phase", e.target.value)}
-                >
-                  <option>Portal venous</option>
-                  <option>Arterial</option>
-                  <option>Unenhanced</option>
-                </select>
-              </label>
-              <label className="muted">
-                Scan quality
-                <select
-                  className="btn"
-                  style={{ width: "100%", marginTop: 4 }}
-                  value={filters.scan_quality}
-                  onChange={(e) => set("scan_quality", e.target.value)}
-                >
-                  <option>Diagnostic (QA-pass)</option>
-                  <option>Research-grade</option>
-                </select>
-              </label>
-              <label
-                className="muted"
-                style={{ display: "flex", gap: 8, alignItems: "center" }}
-              >
-                <input
-                  type="checkbox"
-                  checked={filters.report_available}
-                  onChange={(e) => set("report_available", e.target.checked)}
-                />
-                Radiology report available
-              </label>
-              <label
-                className="muted"
-                style={{ display: "flex", gap: 8, alignItems: "center" }}
-              >
-                <input
-                  type="checkbox"
-                  checked={filters.ground_truth_available}
-                  onChange={(e) =>
-                    set("ground_truth_available", e.target.checked)
-                  }
-                />
-                Ground truth available (research definitions)
-              </label>
-            </div>
           </div>
         </div>
 
-        <div className="panel card-elevated">
-          <h2 className="section-title">Query DSL preview</h2>
+        <div className="console-card">
+          <h3 className="console-card-title">Query DSL preview</h3>
           <div className="code-panel">{queryDsl}</div>
 
-          <h2 className="section-title" style={{ marginTop: 20 }}>
+          <h3 className="console-card-title" style={{ marginTop: 16 }}>
             Natural-language summary
-          </h2>
+          </h3>
           <p style={{ fontSize: 13 }}>
             {filters.organ}-visible abdominal {filters.modality} ·{" "}
             <strong>
               {moStart}–{moEnd} months before diagnosis
             </strong>{" "}
-            window · reports {filters.report_available ? "required" : "optional"}{" "}
-            · ages {filters.age_range[0]}–{filters.age_range[1]}.
+            · reports {filters.report_available ? "required" : "optional"} · ages{" "}
+            {filters.age_range[0]}–{filters.age_range[1]}.
           </p>
+
+          <div className="console-metric-row" style={{ marginTop: 14 }}>
+            <div className="metric-card">
+              <b>4,182</b>
+              <span>Patients (demo estimate)</span>
+            </div>
+            <div className="metric-card">
+              <b>6</b>
+              <span>Centers</span>
+            </div>
+            <div className="metric-card">
+              <b>159</b>
+              <span>Prediagnostic cases</span>
+            </div>
+            <div className="metric-card">
+              <b>347d</b>
+              <span>Median lead time</span>
+            </div>
+          </div>
+
+          <div className="criteria-chips">
+            <div className="mono-label">Inclusion</div>
+            <div className="chip-row">
+              {inclusionChips.map((c) => (
+                <span key={c} className="status-chip status-chip--teal">
+                  {c}
+                </span>
+              ))}
+            </div>
+            <div className="mono-label" style={{ marginTop: 10 }}>
+              Exclusion
+            </div>
+            <div className="chip-row">
+              {exclusionChips.map((c) => (
+                <span key={c} className="status-chip status-chip--amber">
+                  {c}
+                </span>
+              ))}
+            </div>
+          </div>
 
           <button
             type="button"
-            className="btn primary primary-button"
-            style={{ marginTop: 12 }}
+            className="clinical-button"
+            style={{ marginTop: 14 }}
             disabled={busy}
             onClick={() => void onCreate()}
           >
@@ -312,79 +306,79 @@ export function CohortBuilder() {
           </button>
 
           {justCreated && (
-            <div
-              className="disclaimer-bar"
-              style={{ marginTop: 14, borderStyle: "solid", borderColor: "rgba(52,211,153,0.35)" }}
-            >
-              <strong style={{ color: "var(--emerald)" }}>Package queued:</strong>{" "}
-              <code>{justCreated}</code> · demo artifact only.
-            </div>
-          )}
-
-          {lastMeta && (
             <p className="muted" style={{ fontSize: 12, marginTop: 10 }}>
-              {lastMeta}
+              Package <code>{justCreated}</code> queued (deterministic demo).
             </p>
           )}
-
-          <hr className="divider" />
-
-          <h3 className="section-title">Recent demo cohort packages</h3>
-          {packages.length === 0 ? (
-            <p className="muted">No packages yet · run create to simulate</p>
-          ) : (
-            <div className="stack">
-              {packages.map((p) => (
-                <div
-                  key={p.id}
-                  className="card-elevated"
-                  style={{
-                    border: "1px solid var(--border)",
-                    borderRadius: 12,
-                    padding: 14,
-                  }}
-                >
-                  <div style={{ fontWeight: 700 }}>{p.id}</div>
-                  <div className="muted" style={{ fontSize: 12 }}>
-                    {p.name} · {p.created_at}
-                  </div>
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: 8,
-                      marginTop: 10,
-                      fontSize: 12,
-                    }}
-                  >
-                    <div>
-                      Patients <b>{p.patients.toLocaleString()}</b>
-                    </div>
-                    <div>
-                      Scans <b>{p.scans.toLocaleString()}</b>
-                    </div>
-                    <div>
-                      Centers <b>{p.centers}</b>
-                    </div>
-                    <div>
-                      Labels <b>{Math.round(p.label_completeness * 100)}%</b>
-                    </div>
-                    <div style={{ gridColumn: "1 / -1" }}>
-                      Training readiness{" "}
-                      <b>{Math.round(p.training_readiness * 100)}%</b>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          {lastMeta && (
+            <p className="muted" style={{ fontSize: 12 }}>
+              {lastMeta}
+            </p>
           )}
         </div>
       </div>
 
-      <div className="disclaimer-bar">
-        Demo output for research and infrastructure evaluation only. Not
-        intended for clinical diagnosis or treatment decisions.
+      <div className="console-card">
+        <h3 className="console-card-title">Matching cases preview</h3>
+        <p className="muted" style={{ fontSize: 12, marginTop: 0 }}>
+          Sample rows from the 9,901-case metadata catalog — not a live backend query unless API
+          is configured.
+        </p>
+        <div className="table-wrap">
+          <table className="data-table data-table--compact">
+            <thead>
+              <tr>
+                <th>Case ID</th>
+                <th>Age</th>
+                <th>Sex</th>
+                <th>CT phase</th>
+                <th>Tumor</th>
+                <th>Availability</th>
+              </tr>
+            </thead>
+            <tbody>
+              {previewCases.map((c) => (
+                <tr key={c.caseId}>
+                  <td>{c.caseId}</td>
+                  <td>{c.age != null ? Math.round(c.age) : "—"}</td>
+                  <td>{c.sex ?? "—"}</td>
+                  <td>{c.ctPhase ?? "—"}</td>
+                  <td>{getTumorBadge(c)}</td>
+                  <td>{c.hasLocalVolume ? "Local atlas" : "Metadata only"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+      {packages.length > 0 && (
+        <div className="console-card">
+          <h3 className="console-card-title">Recent demo cohort packages</h3>
+          <div className="console-package-grid">
+            {packages.map((p) => (
+              <div key={p.id} className="console-card" style={{ padding: 14 }}>
+                <div style={{ fontWeight: 700 }}>{p.id}</div>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  {p.name} · {p.created_at}
+                </div>
+                <div className="console-metric-row" style={{ marginTop: 10 }}>
+                  <div className="metric-card">
+                    <b>{p.patients.toLocaleString()}</b>
+                    <span>Patients</span>
+                  </div>
+                  <div className="metric-card">
+                    <b>{p.centers}</b>
+                    <span>Centers</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <ConsoleDisclaimer />
+    </ConsolePage>
   );
 }

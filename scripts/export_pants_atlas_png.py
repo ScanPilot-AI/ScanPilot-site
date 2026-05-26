@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import sys
 from datetime import datetime, timezone
+from pathlib import Path
 
 import numpy as np
 from PIL import Image
@@ -11,10 +12,10 @@ from PIL import Image
 from pants_atlas_common import (
     ATLAS_ROOT,
     CASES_ROOT,
+    DATABASE_ROOT,
     DEFAULT_OVERLAY_COLOR,
     IMAGE_TR,
     LABEL_TR,
-    NUM_SLICES,
     ORGAN_COLORS,
     SLICE_AXIS,
     extract_slice_2d,
@@ -112,20 +113,28 @@ def export_case(case_id: str) -> dict:
         if any(paths)
     }
     available_organs = sorted(overlays.keys())
-    manifest = {
-        "version": 1,
+    ct_slice_names = [Path(p).name for p in ct_frames]
+    overlay_slice_names = {
+        organ: [Path(p).name if p else "" for p in paths]
+        for organ, paths in overlays.items()
+    }
+    return {
+        "version": 2,
         "caseId": case_id,
+        "displayName": f"Case {case_id.replace('PanTS_', '')}",
         "sliceCount": len(source_indices),
         "ctFrames": ct_frames,
+        "ctSliceNames": ct_slice_names,
         "sourceSliceIds": source_slice_ids,
-        "overlays": overlays,
+        "overlaysByOrgan": overlays,
+        "overlaySliceNames": overlay_slice_names,
         "availableOrgans": available_organs,
+        "organs": available_organs,
+        "organCount": len(available_organs),
         "hasPancreaticDuct": "pancreatic_duct" in available_organs,
         "hasPancreaticLesion": "pancreatic_lesion" in available_organs,
-        "thumbnailFrame": ct_frames[len(ct_frames) // 2] if ct_frames else None,
+        "thumbnail": ct_frames[len(ct_frames) // 2] if ct_frames else None,
     }
-    write_json(out_dir / "manifest.json", manifest)
-    return manifest
 
 
 def main() -> int:
@@ -135,43 +144,47 @@ def main() -> int:
         return 1
 
     CASES_ROOT.mkdir(parents=True, exist_ok=True)
-    summaries: list[dict] = []
+    db_cases: list[dict] = []
+    index_cases: list[dict] = []
     total_frames = 0
     total_overlay_stacks = 0
     all_organs: set[str] = set()
+    generated_at = datetime.now(timezone.utc).isoformat()
 
     for case_id in case_ids:
         print(f"Exporting {case_id} …")
-        manifest = export_case(case_id)
-        summaries.append(
+        record = export_case(case_id)
+        db_cases.append(record)
+        index_cases.append(
             {
                 "caseId": case_id,
-                "manifestPath": rel_repo_path(CASES_ROOT / case_id / "manifest.json"),
-                "sliceCount": manifest["sliceCount"],
-                "organCount": len(manifest["availableOrgans"]),
-                "hasPancreaticDuct": manifest["hasPancreaticDuct"],
-                "hasPancreaticLesion": manifest["hasPancreaticLesion"],
-                "thumbnailFrame": manifest.get("thumbnailFrame"),
+                "displayName": record["displayName"],
+                "sliceCount": record["sliceCount"],
+                "organCount": record["organCount"],
+                "hasPancreaticDuct": record["hasPancreaticDuct"],
+                "hasPancreaticLesion": record["hasPancreaticLesion"],
+                "thumbnail": record.get("thumbnail"),
             }
         )
-        total_frames += manifest["sliceCount"]
-        total_overlay_stacks += len(manifest["availableOrgans"])
-        all_organs.update(manifest["availableOrgans"])
+        total_frames += record["sliceCount"]
+        total_overlay_stacks += len(record["availableOrgans"])
+        all_organs.update(record["availableOrgans"])
 
-    global_manifest = {
-        "version": 1,
-        "generatedAt": datetime.now(timezone.utc).isoformat(),
-        "disclaimer": (
-            "Static demo using precomputed PanTS-derived assets. "
-            "Not for clinical diagnosis."
-        ),
-        "caseCount": len(case_ids),
-        "totalExportedCtFrames": total_frames,
-        "totalOrganOverlayStacks": total_overlay_stacks,
-        "uniqueOrganLayers": sorted(all_organs),
-        "cases": summaries,
-    }
-    write_json(CASES_ROOT / "manifest.json", global_manifest)
+    DATABASE_ROOT.mkdir(parents=True, exist_ok=True)
+    write_json(
+        DATABASE_ROOT / "pantsAtlasDatabase.json",
+        {
+            "version": 2,
+            "generatedAt": generated_at,
+            "caseCount": len(db_cases),
+            "cases": db_cases,
+            "uniqueOrgans": sorted(all_organs),
+        },
+    )
+    write_json(
+        DATABASE_ROOT / "caseIndex.json",
+        {"version": 2, "generatedAt": generated_at, "cases": index_cases},
+    )
     print(
         f"Done: {len(case_ids)} cases, {total_frames} CT frames, "
         f"{total_overlay_stacks} overlay stacks → {ATLAS_ROOT}"

@@ -64,16 +64,20 @@ export function scanpilotDevStaticPlugin(siteRoot: string): Plugin {
             if (trySendStatic(res, file)) return;
           }
 
-          if (pathname === "/demo" || pathname === "/demo/") {
-            res.statusCode = 302;
-            res.setHeader("Location", `/demo/index.html${q}`);
-            res.end();
+          if (
+            pathname === "/demo" ||
+            pathname === "/demo/" ||
+            pathname === "/demo/index.html"
+          ) {
+            req.url = `/demo/index.html${q}`;
+            next();
             return;
           }
 
-          if (pathname.startsWith("/demo/")) {
-            const file = path.join(siteRoot, pathname);
-            if (trySendStatic(res, file)) return;
+          if (pathname.startsWith("/demo/") && !pathname.includes(".")) {
+            req.url = `/demo/index.html${q}`;
+            next();
+            return;
           }
 
           if (pathname === "/product" || pathname === "/product/") {

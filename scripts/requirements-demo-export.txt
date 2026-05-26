@@ -1,6 +1,8 @@
-# Optional: regenerate static demo slices from public HuggingFace iPanTSMini volumes
+# PanTS Atlas export + catalog build
 nibabel>=5.2
 numpy>=2.0
 pillow>=10.0
 scipy>=1.13
 requests>=2.32
+pandas>=2.2
+openpyxl>=3.1
