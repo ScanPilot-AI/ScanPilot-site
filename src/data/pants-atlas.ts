@@ -1,3 +1,5 @@
+import { getSiteBase } from "../lib/site-base";
+
 export type OrganGroupKey =
   | "pancreas"
   | "duct_lesion"
@@ -253,15 +255,11 @@ let organSchemaCache: PanTSOrganSchema | null = null;
 const atlasCaseMap = new Map<string, PanTSAtlasCase>();
 
 function dataBase(): string {
-  const base = import.meta.env.BASE_URL || "/";
-  const normalized = base.endsWith("/") ? base : `${base}/`;
-  return `${normalized}assets/data`;
+  return `${getSiteBase()}assets/data`;
 }
 
 function atlasBase(): string {
-  const base = import.meta.env.BASE_URL || "/";
-  const normalized = base.endsWith("/") ? base : `${base}/`;
-  return `${normalized}assets/pants-atlas`;
+  return `${getSiteBase()}assets/pants-atlas`;
 }
 
 function databaseBase(): string {
@@ -277,9 +275,7 @@ export function toPublicAssetPath(relativePath: string): string {
     return `${atlasBase()}/${clean.slice("assets/pants-atlas/".length)}`;
   }
   if (clean.startsWith("assets/")) {
-    const base = import.meta.env.BASE_URL || "/";
-    const normalized = base.endsWith("/") ? base : `${base}/`;
-    return `${normalized}${clean}`;
+    return `${getSiteBase()}${clean}`;
   }
   return `${atlasBase()}/${clean}`;
 }
@@ -369,6 +365,10 @@ export async function ensurePanTSAtlasLoaded(): Promise<boolean> {
 
 export function getAtlasCase(caseId: string): PanTSAtlasCase | null {
   return atlasCaseMap.get(caseId) ?? null;
+}
+
+export function getAtlasCaseCount(): number {
+  return atlasCaseMap.size;
 }
 
 export function getCaseCTFrameUrl(caseId: string, sliceIndex: number): string | null {

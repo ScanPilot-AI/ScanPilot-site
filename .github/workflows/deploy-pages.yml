@@ -28,6 +28,9 @@ jobs:
           cache: npm
 
       - name: Install and build
+        env:
+          # Must match GitHub Pages project-site path (repo name).
+          VITE_BASE_PATH: /ScanPilot-site/
         run: |
           npm ci
           npm run build

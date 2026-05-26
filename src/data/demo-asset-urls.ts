@@ -1,11 +1,10 @@
+import { getSiteBase } from "../lib/site-base";
+
 /**
- * Public demo slice paths — no import.meta.glob so the product app boots instantly.
- * Files live under assets/demo-cases/ (served at /assets/demo-cases/ in dev and dist).
+ * Legacy demo slice paths under assets/demo-cases/.
  */
 function assetBase(): string {
-  const base = import.meta.env.BASE_URL || "/";
-  const normalized = base.endsWith("/") ? base : `${base}/`;
-  return `${normalized}assets/demo-cases`;
+  return `${getSiteBase()}assets/demo-cases`;
 }
 
 export function demoAssetUrl(...segments: string[]): string {

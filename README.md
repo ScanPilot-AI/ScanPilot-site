@@ -75,7 +75,7 @@ python3 -m venv .venv
 npm run build
 ```
 
-**Deploy:** Commit `assets/data/pants*.json` and `assets/pants-atlas/` (~13MB PNGs). Metadata-only catalog cases open a detail drawer; only local-volume cases load CT in the viewer.
+**Deploy (GitHub Pages):** The Vite build uses `base: /ScanPilot-site/` so JSON/PNG fetches hit `/ScanPilot-site/assets/…`, not `/ScanPilot-site/product/assets/…`. Commit `assets/data/pants*.json`, `assets/pants-atlas/database/*.json`, and all `assets/pants-atlas/cases/**/*.png` (~1.5k files). CI sets `VITE_BASE_PATH` in `.github/workflows/deploy-pages.yml`. Metadata-only catalog cases open a detail drawer; only local-volume cases load CT in the viewer.
 
 ## Regenerating legacy demo slices
 

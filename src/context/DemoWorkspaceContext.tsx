@@ -15,6 +15,7 @@ import {
   atlasCaseToManifest,
   ensurePanTSAtlasLoaded,
   getAtlasCase,
+  getAtlasCaseCount,
   loadPanTSCatalog,
   loadPanTSLocalAtlas,
   loadPanTSAtlasSummary,
@@ -189,7 +190,9 @@ export function DemoWorkspaceProvider({ children }: { children: ReactNode }) {
   const [activeSection, setActiveSection] = useState<DemoSection>("overview");
 
   const fallbackCaseId = DEMO_CASES[0]?.case_id ?? "";
-  const atlasReady = localAtlas !== null && localAtlas.caseCount > 0;
+  const atlasReady =
+    getAtlasCaseCount() > 0 ||
+    (localAtlas !== null && localAtlas.caseCount > 0);
   const playTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const catalogMap = useMemo(() => {

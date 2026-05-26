@@ -21,7 +21,11 @@ export function ReviewQueue() {
   if (!atlasReady || !localAtlas) {
     return (
       <div className="atlas-panel">
-        <p className="muted">PanTS Atlas manifest unavailable. Using legacy demo cases.</p>
+        <p className="muted">
+          PanTS Atlas database unavailable. Check that{" "}
+          <code>assets/pants-atlas/database/</code> and catalog JSON are deployed at the
+          site root (GitHub Pages: /ScanPilot-site/assets/…).
+        </p>
       </div>
     );
   }

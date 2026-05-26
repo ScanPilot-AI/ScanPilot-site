@@ -9,10 +9,17 @@ const siteRoot = __dirname;
 const productHtml = path.resolve(siteRoot, "product/index.html");
 const demoHtml = path.resolve(siteRoot, "demo/index.html");
 
+/** GitHub Pages project site — must match repo name (see Settings → Pages). */
+const GITHUB_PAGES_BASE =
+  process.env.VITE_BASE_PATH?.replace(/\/?$/, "/") || "/ScanPilot-site/";
+
 export default defineConfig(({ command }) => ({
   plugins: [react(), scanpilotDevStaticPlugin(siteRoot)],
-  /** Dev: absolute base so /product/ loads /@vite and /src modules correctly. */
-  base: command === "build" ? "./" : "/",
+  /**
+   * Production: absolute base so fetch('assets/data/...') resolves to
+   * /ScanPilot-site/assets/... not /ScanPilot-site/product/assets/...
+   */
+  base: command === "build" ? GITHUB_PAGES_BASE : "/",
   server: {
     port: 5173,
     strictPort: true,
